@@ -1,0 +1,85 @@
+go.property("grid_width", 64)
+go.property("grid_height", 64)
+
+local camera = require("orthographic.camera")
+local defos = require("defos.defos")
+
+local grid_size = {
+	coords = {
+		x = 0,
+		y = 0
+	},
+	dims = {
+		x = 0,
+		y = 0
+	}
+}
+
+
+local SCROLL_HORIZONTAL_THRESHOLD = 100
+local SCROLL_VERTICAL_THRESHOLD = 100
+local DISPLAY_WIDTH = tonumber(sys.get_config("display.width"))
+local DISPLAY_HEIGHT = tonumber(sys.get_config("display.height"))
+
+function init(self)
+	defos.disable_mouse_cursor()
+	msg.post(".", "acquire_input_focus")
+	self.camera_id = go.get_id("/camera")
+	self.cursor_pos = vmath.vector3(0, 0, 0)
+	self.camera_velocity = vmath.vector3(0, 0, 0)
+	camera.bounds(self.camera_id, 0, 1408, 2272, 0)
+
+	local x, y, w, h = tilemap.get_bounds("#level")
+	grid_size.coords.x = x
+	grid_size.coords.y = y
+	grid_size.dims.x = w
+	grid_size.dims.y = h
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	local camera_pos = go.get_position(self.camera_id)
+	camera_pos = camera_pos + self.camera_velocity * 200 * dt
+	go.set_position(camera_pos, self.camera_id)
+	go.set_position(self.cursor_pos, "/level1/cursor")
+end
+
+function on_input(self, action_id, action)
+	local screen = vmath.vector3(action.x, action.y, 0)
+	local world = camera.screen_to_world(self.camera_id, screen)
+	if not action_id then
+		
+		-- scroll when mouse is near or outside window edges
+		
+		if screen.x < SCROLL_HORIZONTAL_THRESHOLD then
+			self.camera_velocity.x = (screen.x - SCROLL_HORIZONTAL_THRESHOLD) / 200
+		elseif screen.x > (DISPLAY_WIDTH - SCROLL_HORIZONTAL_THRESHOLD) then
+			self.camera_velocity.x = (screen.x - (DISPLAY_WIDTH - SCROLL_HORIZONTAL_THRESHOLD)) / 200
+		else
+			self.camera_velocity.x = 0
+		end
+		if screen.y < SCROLL_VERTICAL_THRESHOLD then
+			self.camera_velocity.y = (screen.y - SCROLL_VERTICAL_THRESHOLD) / 200
+		elseif screen.y > (DISPLAY_HEIGHT - SCROLL_VERTICAL_THRESHOLD) then
+			self.camera_velocity.y = (screen.y - (DISPLAY_HEIGHT - SCROLL_VERTICAL_THRESHOLD)) / 200
+		else
+			self.camera_velocity.y = 0
+		end
+
+		local x = math.floor(world.x / grid_size.dims.x) * 64
+		local y = math.floor(world.y / grid_size.dims.y) * 64
+
+		pprint({x, y})
+
+		self.cursor_pos = vmath.vector3(x, y, 1.0)
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
