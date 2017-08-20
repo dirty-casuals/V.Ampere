@@ -1,6 +1,6 @@
 [project]
 title = LD39
-dependencies = https://github.com/britzl/defold-orthographic/archive/1.2.zip,https://github.com/subsoap/defos/archive/master.zip
+dependencies = https://github.com/britzl/defold-orthographic/archive/1.2.zip
 
 [bootstrap]
 main_collection = /main/main.collectionc
@@ -9,8 +9,9 @@ main_collection = /main/main.collectionc
 game_binding = /input/game.input_bindingc
 
 [display]
-width = 1280
-height = 1024
+width = 1136
+height = 640
+variable_dt = 1
 
 [script]
 shared_state = 1
@@ -52,7 +53,9 @@ app_icon_192x192 = /assets/appicons/icon_192.png
 auto_finish_transactions = 0
 
 [physics]
-gravity_y = 0.0
-gravity_z = -10.0
+scale = 0.02
 debug = 0
+max_collisions = 256
+max_contacts = 256
+gravity_y = -100.0
 

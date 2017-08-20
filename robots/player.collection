@@ -1,25 +1,5 @@
 name: "default"
 instances {
-  id: "control"
-  prototype: "/input/control.go"
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
   id: "robot"
   prototype: "/robots/robot.go"
   position {
@@ -42,11 +22,10 @@ instances {
 scale_along_z: 0
 embedded_instances {
   id: "player"
-  children: "control"
   children: "robot"
   data: "components {\n"
-  "  id: \"player\"\n"
-  "  component: \"/robots/player.script\"\n"
+  "  id: \"player_control\"\n"
+  "  component: \"/robots/player_control.script\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
