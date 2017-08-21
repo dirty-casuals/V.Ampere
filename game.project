@@ -1,6 +1,6 @@
 [project]
 title = LD39
-dependencies = https://github.com/britzl/defold-orthographic/archive/1.2.zip
+dependencies = 
 
 [bootstrap]
 main_collection = /main/main.collectionc
@@ -54,8 +54,8 @@ auto_finish_transactions = 0
 
 [physics]
 scale = 0.02
-debug = 0
+debug = 1
 max_collisions = 256
 max_contacts = 256
-gravity_y = -100.0
+gravity_y = 0.0
 

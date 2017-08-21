@@ -1,7 +1,6 @@
 .externalToolBuilders
 .DS_Store
 .lock-wscript
-build/**
+build/
 *.pyc
 builtins
-.internal/**

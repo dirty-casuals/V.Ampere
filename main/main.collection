@@ -1,10 +1,10 @@
 name: "default"
-collection_instances {
-  id: "player"
-  collection: "/robots/player.collection"
+instances {
+  id: "robot"
+  prototype: "/robots/robot.go"
   position {
-    x: 374.212
-    y: 230.285
+    x: 371.136
+    y: 428.233
     z: 0.0
   }
   rotation {
@@ -39,6 +39,26 @@ collection_instances {
     z: 1.0
   }
 }
+collection_instances {
+  id: "player"
+  collection: "/robots/player.collection"
+  position {
+    x: 355.851
+    y: 244.648
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "camera"
@@ -50,51 +70,6 @@ embedded_instances {
   "near_z: 0.1\\n"
   "far_z: 1000.0\\n"
   "auto_aspect_ratio: 0\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"collisionobject\"\n"
-  "  type: \"collisionobject\"\n"
-  "  data: \"collision_shape: \\\"\\\"\\n"
-  "type: COLLISION_OBJECT_TYPE_KINEMATIC\\n"
-  "mass: 0.0\\n"
-  "friction: 0.1\\n"
-  "restitution: 0.5\\n"
-  "group: \\\"robot\\\"\\n"
-  "mask: \\\"wall\\\"\\n"
-  "embedded_collision_shape {\\n"
-  "  shapes {\\n"
-  "    shape_type: TYPE_SPHERE\\n"
-  "    position {\\n"
-  "      x: 0.0\\n"
-  "      y: 0.0\\n"
-  "      z: 0.0\\n"
-  "    }\\n"
-  "    rotation {\\n"
-  "      x: 0.0\\n"
-  "      y: 0.0\\n"
-  "      z: 0.0\\n"
-  "      w: 1.0\\n"
-  "    }\\n"
-  "    index: 0\\n"
-  "    count: 1\\n"
-  "  }\\n"
-  "  data: 26.163\\n"
-  "}\\n"
-  "linear_damping: 0.0\\n"
-  "angular_damping: 0.0\\n"
-  "locked_rotation: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
