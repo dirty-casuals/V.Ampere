@@ -1,0 +1,13 @@
+function init(self)
+	self.listeners = {}
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") then
+		for idx, listener in pairs(self.listeners) do
+			msg.post(listener, "robot_collision", {collision = message})
+		end
+	elseif message_id == hash("request_collisions") then
+		self.listeners[#self.listeners + 1] = sender
+	end
+end

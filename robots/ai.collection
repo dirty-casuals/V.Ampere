@@ -21,24 +21,9 @@ instances {
 }
 scale_along_z: 0
 embedded_instances {
-  id: "player"
+  id: "ai"
   children: "robot"
-  data: "components {\n"
-  "  id: \"player_control\"\n"
-  "  component: \"/robots/player_control.script\"\n"
-  "  position {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  ""
+  data: ""
   position {
     x: 0.0
     y: 0.0

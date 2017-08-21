@@ -4,6 +4,8 @@ go.property("linear_velocity", 200)
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	msg.post("/camera", "acquire_camera_focus")
+
+	msg.post("/player/robot", "request_collisions")
 	
 	self.move = 0		-- direction of movement (0 = standing still, 1 = forward, -1 = backward)
 	self.rotate = 0		-- direction of rotation (0 = no rotation, 1 = left, -1 = right)
@@ -65,7 +67,11 @@ function on_input(self, action_id, action)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("contact_point_response") and message.group == hash("wall") then
-		go.set_position(go.get_position() + message.normal * message.distance)
+	if message_id == hash("robot_collision") then
+		if message.collision.group == hash("wall") then
+			go.set_position(go.get_position() + message.collision.normal * message.collision.distance)
+		elseif message.collision.group == hash("robot") then
+			go.delete(message.collision.other_id)
+		end
 	end
 end

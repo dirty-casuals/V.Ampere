@@ -14,7 +14,7 @@ height = 640
 variable_dt = 1
 
 [script]
-shared_state = 1
+shared_state = 0
 
 [ios]
 app_icon_120x120 = /assets/appicons/icon_120.png
