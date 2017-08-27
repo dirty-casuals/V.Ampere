@@ -1,0 +1,55 @@
+local constants = require "constants"
+
+go.property("power_level", 100.0)
+go.property("movement_drain", -2.0)
+go.property("enemy_increase", 10.0)
+
+local function send_message(listeners, message_id, message)
+	for idx, listener in pairs(listeners) do
+		msg.post(listener, message_id, message)
+	end
+end
+
+local function send_power_outage(self)
+	send_message(self.power_outage_listeners, constants.POWER_OUTAGE, {})
+end
+
+local function send_power_update(self)
+	send_message(self.power_update_listeners, constants.POWER_UPDATE, {power_level = self.power_level})
+end
+
+local function update_power(self, drain, method)
+	self.power_level = self.power_level + drain
+	send_power_update(self)
+	if self.power_level <= 0 then
+		send_power_outage(self)
+	end
+end
+
+function init(self)
+	self.prev_pos = go.get_world_position()
+	self.power_outage_listeners = {}
+	self.power_update_listeners = {}
+
+	msg.post("/player/robot", constants.LISTEN_PLAYER_COLLISION)
+end
+
+function update(self, dt)
+	local new_pos = go.get_world_position()
+	local distance = vmath.length(self.prev_pos - new_pos)
+	local tiles = math.floor(distance / constants.TILE_SIZE)
+	if tiles >= 1 then
+		update_power(self, self.movement_drain)
+		self.prev_pos = go.get_world_position()
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash(constants.LISTEN_POWER_OUTAGE) then
+		self.power_outage_listeners[#self.power_outage_listeners + 1] = sender
+	elseif message_id == hash(constants.LISTEN_POWER_UPDATE) then
+		self.power_update_listeners[#self.power_update_listeners + 1] = sender
+	elseif message_id == hash(constants.PLAYER_COLLISION) and message.collision.group == hash("robot") then
+		update_power(self, self.enemy_increase)
+	end
+end

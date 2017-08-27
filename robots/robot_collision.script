@@ -1,3 +1,5 @@
+local constants = require "constants"
+
 function init(self)
 	self.listeners = {}
 end
@@ -5,9 +7,9 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("contact_point_response") then
 		for idx, listener in pairs(self.listeners) do
-			msg.post(listener, "robot_collision", {collision = message})
+			msg.post(listener, constants.PLAYER_COLLISION, {collision = message})
 		end
-	elseif message_id == hash("request_collisions") then
+	elseif message_id == hash(constants.LISTEN_PLAYER_COLLISION) then
 		self.listeners[#self.listeners + 1] = sender
 	end
 end

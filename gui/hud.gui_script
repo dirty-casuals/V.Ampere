@@ -1,0 +1,19 @@
+local constants = require "constants"
+
+local function update_power_level(self, new_power_level)
+	local new_power = (new_power_level / 100) * self.start_power_size.x
+	local new_size = vmath.vector3(new_power, self.start_power_size.y, self.start_power_size.z)
+	gui.animate(self.health, "size", new_size, gui.EASING_LINEAR, 0.2, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
+end
+
+function init(self)
+	self.health = gui.get_node("power")
+	self.start_power_size = gui.get_size(self.health)
+	msg.post("/player/player", constants.LISTEN_POWER_UPDATE)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash(constants.POWER_UPDATE) then
+		update_power_level(self, message.power_level)
+	end
+end

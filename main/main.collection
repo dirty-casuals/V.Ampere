@@ -21,7 +21,7 @@ collection_instances {
 }
 collection_instances {
   id: "player"
-  collection: "/robots/player.collection"
+  collection: "/player/player.collection"
   position {
     x: 355.851
     y: 244.648
@@ -41,9 +41,9 @@ collection_instances {
 }
 collection_instances {
   id: "ai"
-  collection: "/robots/ai.collection"
+  collection: "/ai/simple_ai.collection"
   position {
-    x: 467.054
+    x: 660.178
     y: 422.573
     z: 0.0
   }
@@ -71,6 +71,41 @@ embedded_instances {
   "far_z: 1000.0\\n"
   "auto_aspect_ratio: 0\\n"
   "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "gui"
+  data: "components {\n"
+  "  id: \"hud\"\n"
+  "  component: \"/gui/hud.gui\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
