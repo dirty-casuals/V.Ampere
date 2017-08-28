@@ -30,6 +30,14 @@ local function move_to_target(self, dt)
 		-- move towards target
 		local d = vmath.rotate(q, vmath.vector3(0, 1, 0))
 		go.set_position(pos + d * self.speed * dt)
+
+		if vmath.length(go.get_position() - self.target_pos) <= 15.0 then
+			if self.target_pos == self.start_pos then
+				self.target_pos = nil
+			else
+				self.target_pos = self.start_pos
+			end
+		end
 	end
 end
 
@@ -38,6 +46,7 @@ function init(self)
 	self.scan_angles =  {-math.pi / 6, math.pi / 6}
 	self.scan_for = {hash("robot"), hash("wall")}
 	self.target_pos = nil
+	self.start_pos = go.get_position()
 
 	msg.post("/ai/robot", constants.LISTEN_PLAYER_COLLISION)
 end
