@@ -43,15 +43,15 @@ collection_instances {
   id: "ai"
   collection: "/ai/simple_ai.collection"
   position {
-    x: 660.178
-    y: 422.573
+    x: 315.322
+    y: 602.498
     z: 0.0
   }
   rotation {
     x: 0.0
     y: 0.0
-    z: 0.0
-    w: 1.0
+    z: 1.0
+    w: 6.123234E-17
   }
   scale3 {
     x: 1.0

@@ -19,7 +19,7 @@ function final(self)
 end
 
 function update(self, dt)
-	local rotation = go.get_rotation()
+	local rotation = go.get_world_rotation()
 	-- handle rotation from key input left/right
 	if self.rotate ~= 0 then
 		rotation = rotation * vmath.quat_rotation_z(self.angular_velocity * self.rotate * dt)
@@ -43,7 +43,6 @@ function update(self, dt)
 		pos = pos + direction
 		go.set_position(pos)
 	end
-	
 	-- update camera position
 	go.set_position(pos + vmath.vector3(-568, - 320, 0), "/camera")
 end
@@ -72,8 +71,6 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash(constants.PLAYER_COLLISION) then
 		if message.collision.group == hash("wall") then
 			go.set_position(go.get_position() + message.collision.normal * message.collision.distance)
-		elseif message.collision.group == hash("robot") then
-			go.delete(message.collision.other_id)
 		end
 	end
 end

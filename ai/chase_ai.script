@@ -1,0 +1,58 @@
+local constants = require "constants"
+
+go.property("scan_distance_tiles",  7)
+go.property("speed", 200)
+
+local function scan(self)
+	local pos = go.get_position()
+	local rot = 2 * math.asin(go.get_rotation().z)
+
+	for angle = self.scan_angles[1], self.scan_angles[2], 0.05 do
+		local new_y = math.cos(angle - rot) * self.projection_length
+		local new_x = math.sin(angle - rot) * self.projection_length
+		local new_vect = vmath.vector3(pos.x + new_x, pos.y + new_y, pos.z)
+
+		msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
+		physics.ray_cast(pos, new_vect, self.scan_for)
+	end
+end
+
+local function move_to_target(self, dt)
+	if self.target_pos ~= nil then
+		local pos = go.get_world_position()
+		local target_angle = -math.atan2(self.target_pos.x - pos.x, self.target_pos.y - pos.y)
+		local target_quat = vmath.quat_rotation_z(target_angle)
+		local current_quat = go.get_rotation()
+
+		local q = vmath.slerp(0.08, current_quat, target_quat)
+		go.set_rotation(q)
+		
+		-- move towards target
+		local d = vmath.rotate(q, vmath.vector3(0, 1, 0))
+		go.set_position(pos + d * self.speed * dt)
+	end
+end
+
+function init(self)
+	self.projection_length = constants.TILE_SIZE * self.scan_distance_tiles
+	self.scan_angles =  {-math.pi / 6, math.pi / 6}
+	self.scan_for = {hash("robot"), hash("wall")}
+	self.target_pos = nil
+
+	msg.post("/ai/robot", constants.LISTEN_PLAYER_COLLISION)
+end
+
+function update(self, dt)
+	scan(self)
+	move_to_target(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("ray_cast_response") and message.group == hash("robot") then
+        self.target_pos = message.position
+    elseif message_id == hash(constants.PLAYER_COLLISION) then
+		if message.collision.group == hash("robot") then
+			go.delete()
+		end
+	end
+end
