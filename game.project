@@ -54,7 +54,7 @@ auto_finish_transactions = 0
 
 [physics]
 scale = 0.02
-debug = 1
+debug = 0
 max_collisions = 256
 max_contacts = 256
 gravity_y = 0.0

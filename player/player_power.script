@@ -2,12 +2,18 @@ local constants = require "constants"
 
 go.property("power_level", 100.0)
 go.property("movement_drain", -2.0)
+go.property("extra_siphon_drain", -1.0)
 go.property("enemy_increase", 10.0)
+go.property("minimum_circle_scale", 1.0)
 
 local function send_message(listeners, message_id, message)
 	for idx, listener in pairs(listeners) do
 		msg.post(listener, message_id, message)
 	end
+end
+
+local function lerp(a, b, t)
+	return a + (b - a) * t
 end
 
 local function send_power_outage(self)
@@ -21,8 +27,26 @@ end
 local function update_power(self, drain, method)
 	self.power_level = self.power_level + drain
 	send_power_update(self)
+
 	if self.power_level <= 0 then
+		self.power_level = 0
 		send_power_outage(self)
+	end
+
+	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
+	local scale_vect = vmath.vector3(scale, scale, 1.0)
+	-- scale = lerp(self.minimum_circle_scale, self.power_circle_start_scale, scale)
+	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
+	go.set_scale(lerped_vect, "circle")
+end
+
+local function toggle_power_drain(self, enable)
+	if enable then
+		msg.post("circle", "enable")
+		self.movement_drain = self.movement_drain + self.extra_siphon_drain
+	else
+		msg.post("circle", "disable")
+		self.movement_drain = self.movement_drain - self.extra_siphon_drain
 	end
 end
 
@@ -30,8 +54,12 @@ function init(self)
 	self.prev_pos = go.get_world_position()
 	self.power_outage_listeners = {}
 	self.power_update_listeners = {}
+	self.power_circle_start_scale = go.get_scale("circle")
+	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, 1.0)
 
+	msg.post("circle", "disable")
 	msg.post("/player/robot", constants.LISTEN_PLAYER_COLLISION)
+	msg.post(".", constants.LISTEN_FIRE_PRESS)
 end
 
 function update(self, dt)
@@ -51,5 +79,9 @@ function on_message(self, message_id, message, sender)
 		self.power_update_listeners[#self.power_update_listeners + 1] = sender
 	elseif message_id == hash(constants.PLAYER_COLLISION) and message.collision.group == hash("robot") then
 		update_power(self, self.enemy_increase)
+	elseif message_id == hash(constants.FIRE_PRESS) then
+		toggle_power_drain(self, true)
+	elseif message_id == hash(constants.FIRE_RELEASE) then
+		toggle_power_drain(self, false)
 	end
 end

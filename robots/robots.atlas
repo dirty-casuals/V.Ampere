@@ -1,7 +1,17 @@
 animations {
   id: "man"
   images {
-    image: "/images/hitman1_machine.png"
+    image: "/images/robot.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "circle"
+  images {
+    image: "/images/circle.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
