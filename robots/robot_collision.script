@@ -1,15 +1,17 @@
 local constants = require "constants"
 
 function init(self)
-	self.listeners = {}
+	self.collision_listeners = {}
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("contact_point_response") then
-		for idx, listener in pairs(self.listeners) do
-			msg.post(listener, constants.PLAYER_COLLISION, {collision = message})
+ 	if message_id == hash("contact_point_response") then
+		for idx, listener in pairs(self.collision_listeners) do
+			msg.post(listener, constants.ROBOT_COLLISION, {collision = message})
 		end
-	elseif message_id == hash(constants.LISTEN_PLAYER_COLLISION) then
-		self.listeners[#self.listeners + 1] = sender
+	elseif message_id == hash(constants.LISTEN_ROBOT_COLLISION) then
+	    self.collision_listeners[#self.collision_listeners + 1] = sender
+	elseif message_id == hash("trigger_response") and message.group == hash("player") and message.enter then
+		msg.post("ai", constants.PLAYER_SIPHON_ENTER, {collision = message})
 	end
 end

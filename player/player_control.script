@@ -7,7 +7,7 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	msg.post("/camera", "acquire_camera_focus")
 
-	msg.post("/player/robot", constants.LISTEN_PLAYER_COLLISION)
+	msg.post("/player/robot_player", constants.LISTEN_ROBOT_COLLISION)
 	
 	self.move = 0
 	self.rotate = 0
@@ -72,7 +72,7 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash(constants.LISTEN_FIRE_PRESS) then
 		self.fire_listeners[#self.fire_listeners + 1] = sender
-	elseif message_id == hash(constants.PLAYER_COLLISION) then
+	elseif message_id == hash(constants.ROBOT_COLLISION) then
 		if message.collision.group == hash("wall") then
 			go.set_position(go.get_position() + message.collision.normal * message.collision.distance)
 		end
