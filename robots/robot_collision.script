@@ -11,7 +11,7 @@ function on_message(self, message_id, message, sender)
 		end
 	elseif message_id == hash(constants.LISTEN_ROBOT_COLLISION) then
 	    self.collision_listeners[#self.collision_listeners + 1] = sender
-	elseif message_id == hash("trigger_response") and message.group == hash("player") and message.enter then
-		msg.post("ai", constants.PLAYER_SIPHON_ENTER, {collision = message})
+	elseif message_id == hash(constants.PLAYER_SIPHON_ENTER) then
+		msg.post("ai", constants.PLAYER_SIPHON_ENTER)
 	end
 end

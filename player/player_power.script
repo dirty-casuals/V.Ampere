@@ -37,7 +37,23 @@ local function update_power(self, drain, method)
 	local scale_vect = vmath.vector3(scale, scale, scale)
 	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
 	go.set_scale(lerped_vect, "circle")
+end
+
+local function siphon_scan(self)
 	if self.is_siphoning then
+		local circle_size = go.get("circle#circle", "size")
+		local circle_scale = go.get_scale("circle").x / self.power_circle_start_scale.x
+		local circle_factor = circle_size.x * circle_scale
+		local pos = go.get_position()
+		for angle = -math.pi, math.pi, 0.261799 do
+			local new_y = math.cos(angle) * circle_factor
+			local new_x = math.sin(angle) * circle_factor
+
+			local new_vect = vmath.vector3(pos.x + new_x, pos.y + new_y, pos.z)
+
+			-- msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
+			physics.ray_cast(pos, new_vect, {hash("robot")})
+		end
 
 	end
 end
@@ -74,6 +90,7 @@ function update(self, dt)
 		update_power(self, self.movement_drain)
 		self.prev_pos = go.get_world_position()
 	end
+	siphon_scan(self)
 end
 
 function on_message(self, message_id, message, sender)
@@ -87,5 +104,7 @@ function on_message(self, message_id, message, sender)
 		toggle_power_drain(self, true)
 	elseif message_id == hash(constants.FIRE_RELEASE) then
 		toggle_power_drain(self, false)
+    elseif message_id == hash("ray_cast_response") and message.group == hash("robot") then
+		msg.post(message.id, constants.PLAYER_SIPHON_ENTER)
 	end
 end

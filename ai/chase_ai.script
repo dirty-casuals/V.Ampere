@@ -67,11 +67,9 @@ function on_message(self, message_id, message, sender)
     if message_id == hash("ray_cast_response") and message.group == hash("player") then
         self.target_pos = message.position
     elseif message_id == hash(constants.PLAYER_SIPHON_ENTER) then
-		if message.collision.group == hash("player") then
-			go.delete("circle")
-			go.delete("robot")
-			go.delete()
-		end
+		go.delete("circle")
+		go.delete("robot")
+		go.delete()
     elseif message_id == hash(constants.ROBOT_COLLISION) then
 		if message.collision.group == hash("wall") then
 			go.set_position(go.get_position() + message.collision.normal * message.collision.distance)
