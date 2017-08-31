@@ -10,7 +10,7 @@ local function scan(self)
 	local pos = go.get_position()
 	local rot = 2 * math.asin(go.get_rotation().z)
 
-	for angle = self.scan_angles[1], self.scan_angles[2], 0.05 do
+	for angle = self.scan_angles[1], self.scan_angles[2], 0.1 do
 		local ray_angle = angle - rot
 		local new_y = math.cos(ray_angle) * self.projection_length
 		local new_x = math.sin(ray_angle) * self.projection_length
@@ -30,6 +30,7 @@ local function move_to_target(self, dt)
 				return
 			else
 				self.target_pos = self.start_pos
+				self.alerted = false
 			end
 		end
 
@@ -54,18 +55,31 @@ function init(self)
 	self.target_pos = nil
 	self.start_pos = go.get_position()
 	self.power_level = math.random(self.min_power, self.max_power)
+	self.alerted = false
+	self.was_alerted = self.alerted
+	msg.post("circle", "disable")
 
 	msg.post("/ai/robot", constants.LISTEN_ROBOT_COLLISION)
 end
 
 function update(self, dt)
-	-- scan(self)
+	scan(self)
 	move_to_target(self, dt)
+
+	-- if self.was_alerted ~= self.alerted then
+		if self.alerted then
+			msg.post("circle", "enable")
+		else
+			msg.post("circle", "disable")
+		end
+		-- self.was_alerted = self.alerted
+	-- end
 end
 
 function on_message(self, message_id, message, sender)
     if message_id == hash("ray_cast_response") and message.group == hash("player") then
         self.target_pos = message.position
+		self.alerted = true
     elseif message_id == hash(constants.PLAYER_SIPHON_ENTER) then
 		go.delete("circle")
 		go.delete("robot")
