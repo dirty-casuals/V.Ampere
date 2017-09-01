@@ -1,19 +1,17 @@
 local constants = require "constants"
 
 go.property("power_level", 100.0)
-go.property("movement_drain", -2.0)
+go.property("movement_drain", -40.0)
 go.property("extra_siphon_drain", -1.0)
+go.property("siphon_drain_rate", 10.0)
 go.property("enemy_increase", 10.0)
 go.property("minimum_circle_scale", 1.0)
+go.property("max_power_level", 100.0)
 
 local function send_message(listeners, message_id, message)
 	for idx, listener in pairs(listeners) do
 		msg.post(listener, message_id, message)
 	end
-end
-
-local function lerp(a, b, t)
-	return a + (b - a) * t
 end
 
 local function send_power_outage(self)
@@ -26,6 +24,9 @@ end
 
 local function update_power(self, drain, method)
 	self.power_level = self.power_level + drain
+	if self.power_level > self.max_power_level then
+		return
+	end
 	send_power_update(self)
 
 	if self.power_level <= 0 then
@@ -66,6 +67,21 @@ local function toggle_power_drain(self, enable)
 	else
 		msg.post("circle", "disable")
 		self.movement_drain = self.movement_drain - self.extra_siphon_drain
+		self.ai_map = {}
+	end
+end
+
+local function siphon(self, dt)
+	for k, id in pairs(self.ai_map) do
+		local ai_url = msg.url(nil, id, "chase_ai")
+		local ai_power = go.get(ai_url, "power_level")
+		local ai_alerted = go.get(ai_url, "alerted")
+
+		if ai_power > 0 and ai_alerted == false then
+			go.set(ai_url, "power_level", ai_power - (self.siphon_drain_rate *dt))
+			msg.post(ai_url, constants.PLAYER_SIPHON)
+			update_power(self, self.siphon_drain_rate * dt)
+		end
 	end
 end
 
@@ -76,9 +92,10 @@ function init(self)
 	self.power_circle_start_scale = go.get_scale("circle")
 	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
 	self.is_siphoning = false
+	self.ai_map = {}
 
 	msg.post("circle", "disable")
-	msg.post("/player/robot_player", constants.LISTEN_PLAYER_SIPHON_ENTER)
+	msg.post("/player/robot_player", constants.LISTEN_PLAYER_SIPHON)
 	msg.post(".", constants.LISTEN_FIRE_PRESS)
 end
 
@@ -87,10 +104,13 @@ function update(self, dt)
 	local distance = vmath.length(self.prev_pos - new_pos)
 	local tiles = math.floor(distance / constants.TILE_SIZE)
 	if tiles >= 1 then
-		update_power(self, self.movement_drain)
+		update_power(self, self.movement_drain * dt)
 		self.prev_pos = go.get_world_position()
 	end
+
 	siphon_scan(self)
+	siphon(self, dt)
+	self.ai_map = {}
 end
 
 function on_message(self, message_id, message, sender)
@@ -98,13 +118,15 @@ function on_message(self, message_id, message, sender)
 		self.power_outage_listeners[#self.power_outage_listeners + 1] = sender
 	elseif message_id == hash(constants.LISTEN_POWER_UPDATE) then
 		self.power_update_listeners[#self.power_update_listeners + 1] = sender
-	elseif message_id == hash(constants.PLAYER_SIPHON_ENTER) and message.collision.group == hash("robot") then
+	elseif message_id == hash(constants.PLAYER_SIPHON) and message.collision.group == hash("robot") then
 		update_power(self, self.enemy_increase)
 	elseif message_id == hash(constants.FIRE_PRESS) then
 		toggle_power_drain(self, true)
 	elseif message_id == hash(constants.FIRE_RELEASE) then
 		toggle_power_drain(self, false)
     elseif message_id == hash("ray_cast_response") and message.group == hash("robot") then
-		msg.post(message.id, constants.PLAYER_SIPHON_ENTER)
+		if self.ai_map[message.id] == nil then
+			self.ai_map[message.id] = message.id
+		end
 	end
 end
