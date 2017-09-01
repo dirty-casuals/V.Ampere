@@ -6,6 +6,7 @@ go.property("speed", 100)
 go.property("power_level", 100.0)
 go.property("alerted", false)
 go.property("minimum_circle_scale", 0.5)
+go.property("siphon_drain_rate", 10.0)
 
 local function scan(self)
 	local pos = go.get_position()
@@ -82,7 +83,19 @@ function update(self, dt)
 		msg.post("circle", "enable")
 
 		local player_pos = go.get_position("/player/player")
-		print(vmath.length(go.get_position() - player_pos))
+		local dist_to_player = vmath.length(go.get_position() - player_pos)
+		local circle_size = go.get("circle#circle", "size")
+		local circle_scale = go.get_scale("circle").x / self.power_circle_start_scale.x
+		local circle_factor = circle_size.x * circle_scale
+		if dist_to_player <= circle_factor then
+			local player_url = msg.url(nil, "/player/player", "player_power")
+			local player_power = go.get(player_url, "power_level")
+
+			if player_power > 0 then
+				go.set(player_url, "power_level", player_power - (self.siphon_drain_rate *dt))
+				self.power_level = self.power_level +  (self.siphon_drain_rate *dt)
+			end
+		end
 	else
 		msg.post("circle", "disable")
 	end
