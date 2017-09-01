@@ -95,7 +95,6 @@ function init(self)
 	self.ai_map = {}
 
 	msg.post("circle", "disable")
-	msg.post("/player/robot_player", constants.LISTEN_PLAYER_SIPHON)
 	msg.post(".", constants.LISTEN_FIRE_PRESS)
 end
 
@@ -118,8 +117,6 @@ function on_message(self, message_id, message, sender)
 		self.power_outage_listeners[#self.power_outage_listeners + 1] = sender
 	elseif message_id == hash(constants.LISTEN_POWER_UPDATE) then
 		self.power_update_listeners[#self.power_update_listeners + 1] = sender
-	elseif message_id == hash(constants.PLAYER_SIPHON) and message.collision.group == hash("robot") then
-		update_power(self, self.enemy_increase)
 	elseif message_id == hash(constants.FIRE_PRESS) then
 		toggle_power_drain(self, true)
 	elseif message_id == hash(constants.FIRE_RELEASE) then
