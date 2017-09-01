@@ -5,6 +5,7 @@ go.property("distance_to_give_up", 12.0)
 go.property("speed", 100)
 go.property("power_level", 100.0)
 go.property("alerted", false)
+go.property("minimum_circle_scale", 0.5)
 
 local function scan(self)
 	local pos = go.get_position()
@@ -48,6 +49,13 @@ local function move_to_target(self, dt)
 	end
 end
 
+local function set_siphon_size(self)
+	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
+	local scale_vect = vmath.vector3(scale, scale, scale)
+	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
+	go.set_scale(lerped_vect, "circle")
+end
+
 function init(self)
 	self.projection_length = constants.TILE_SIZE * self.scan_distance_tiles
 	self.scan_angles =  {-math.pi / 6, math.pi / 6}
@@ -56,26 +64,33 @@ function init(self)
 	self.start_pos = go.get_position()
 	self.alerted = false
 	self.siphoned = false
+	self.power_circle_start_scale = go.get_scale("circle")
+	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
 	msg.post("circle", "disable")
 
 	-- msg.post("/ai/robot", constants.LISTEN_ROBOT_COLLISION)
 end
 
 function update(self, dt)
+	if self.siphoned ~= true then
+		scan(self)
+		move_to_target(self, dt)
+	end
+
+	if self.alerted and self.siphoned ~= true then
+		set_siphon_size(self)
+		msg.post("circle", "enable")
+
+		local player_pos = go.get_position("/player/player")
+		print(vmath.length(go.get_position() - player_pos))
+	else
+		msg.post("circle", "disable")
+	end
+
 	if self.power_level <= 50 then
 		go.delete()
-	else
-		if self.siphoned ~= true then
-			scan(self)
-			move_to_target(self, dt)
-		end
-
-		if self.alerted and self.siphoned ~= true then
-			msg.post("circle", "enable")
-		else
-			msg.post("circle", "disable")
-		end
 	end
+
 	self.siphoned = false
 end
 
