@@ -18,13 +18,11 @@ function final(self)
 end
 
 function update(self, dt)
-	local rotation = go.get_world_rotation()
+	local rotation = go.get_rotation()
 	-- handle rotation from key input left/right
 	if self.rotate ~= 0 then
 		rotation = rotation * vmath.quat_rotation_z(self.angular_velocity * self.rotate * dt)
 		go.set_rotation(rotation)
-	-- rotate towards the latest mouse/touch location
-	-- take into account camera position
 	end
 	
 	-- move in direction of rotation
@@ -42,19 +40,17 @@ end
 function on_input(self, action_id, action)
 	if action_id == hash("left") then
 		self.rotate = action.released and 0 or 1
-
-		if action.released then
-			self.rotate = 0
-		else
-			self.rotate = 1
-		end
 	elseif action_id == hash("right") then
 		self.rotate = action.released and 0 or -1
-	elseif action_id == hash("up") then
+	end
+	
+	if action_id == hash("up") then
 		self.move = action.released and 0 or 1
 	elseif action_id == hash("down") then
 		self.move = action.released and 0 or -1
-	elseif action_id == hash("fire") then
+	end
+	
+	if action_id == hash("fire") then
 		if action.pressed then
 			for idx, listener in pairs(self.fire_listeners) do
 				msg.post(listener, constants.FIRE_PRESS)
