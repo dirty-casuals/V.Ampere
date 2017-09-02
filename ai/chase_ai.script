@@ -4,7 +4,7 @@ go.property("scan_distance_tiles",  7)
 go.property("distance_to_give_up", 12.0)
 go.property("speed", 100)
 go.property("power_level", 100.0)
-go.property("alerted", false)
+go.property("alert_level", 0.0)
 go.property("minimum_circle_scale", 0.5)
 go.property("siphon_drain_rate", 30.0)
 
@@ -30,9 +30,6 @@ local function move_to_target(self, dt)
 			if self.target_pos == self.start_pos then
 				self.target_pos = nil
 				return
-			else
-				self.target_pos = self.start_pos
-				self.alerted = false
 			end
 		end
 
@@ -57,60 +54,83 @@ local function set_siphon_size(self)
 	go.set_scale(lerped_vect, "circle")
 end
 
+local function siphon_from_player(self, dt)
+	local player_pos = go.get_position("/player/player")
+	local dist_to_player = vmath.length(go.get_position() - player_pos)
+	local circle_size = go.get("circle#circle", "size")
+	local circle_scale = go.get_scale("circle").x / self.power_circle_start_scale.x
+	local circle_factor = circle_size.x * circle_scale
+	if dist_to_player <= circle_factor then
+		local player_url = msg.url(nil, "/player/player", "player_power")
+		local player_power = go.get(player_url, "power_level")
+
+		if player_power > 0 then
+			go.set(player_url, "power_level", player_power - (self.siphon_drain_rate *dt))
+			self.power_level = self.power_level +  (self.siphon_drain_rate *dt)
+		end
+	end
+end
+
 function init(self)
 	self.projection_length = constants.TILE_SIZE * self.scan_distance_tiles
 	self.scan_angles =  {-math.pi / 6, math.pi / 6}
 	self.scan_for = {hash("robot"), hash("wall"), hash("player")}
 	self.target_pos = nil
 	self.start_pos = go.get_position()
-	self.alerted = false
 	self.siphoned = false
 	self.power_circle_start_scale = go.get_scale("circle")
 	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
+	self.alert_level = 0.0
+	self.alert_increase_rate = 30.0
+	self.alert_decrease_rate = -20.0
+	self.alert_rate = self.alert_decrease_rate
 	msg.post("circle", "disable")
-
-	-- msg.post("/ai/robot", constants.LISTEN_ROBOT_COLLISION)
 end
 
 function update(self, dt)
+
 	if self.siphoned ~= true then
 		scan(self)
 		move_to_target(self, dt)
 	end
 
-	if self.alerted and self.siphoned ~= true then
+	self.alert_level = self.alert_level + (self.alert_rate * dt)
+	if self.alert_level < 0.0 then
+		self.alert_level = 0.0
+	elseif self.alert_level > 100.0 then
+		self.alert_level = 100.0
+	end
+
+	if self.alert_level == 0.0 then
+		self.alerted = false
+		if self.target_pos ~= nil then
+			self.target_pos = self.start_pos
+		end
+	end
+	print(self.alert_level)
+
+	if (self.alerted or self.alert_level > 0.0) and self.siphoned ~= true then
 		set_siphon_size(self)
 		msg.post("circle", "enable")
 
-		local player_pos = go.get_position("/player/player")
-		local dist_to_player = vmath.length(go.get_position() - player_pos)
-		local circle_size = go.get("circle#circle", "size")
-		local circle_scale = go.get_scale("circle").x / self.power_circle_start_scale.x
-		local circle_factor = circle_size.x * circle_scale
-		if dist_to_player <= circle_factor then
-			local player_url = msg.url(nil, "/player/player", "player_power")
-			local player_power = go.get(player_url, "power_level")
-
-			if player_power > 0 then
-				go.set(player_url, "power_level", player_power - (self.siphon_drain_rate *dt))
-				self.power_level = self.power_level +  (self.siphon_drain_rate *dt)
-			end
-		end
+		siphon_from_player(self, dt)
 	else
 		msg.post("circle", "disable")
 	end
 
-	if self.power_level <= 50 then
+	if self.power_level <= 0.0 then
 		go.delete()
 	end
 
+	-- self.alerted = false
+	self.alert_rate = self.alert_decrease_rate
 	self.siphoned = false
 end
 
 function on_message(self, message_id, message, sender)
     if message_id == hash("ray_cast_response") and message.group == hash("player") then
         self.target_pos = message.position
-		self.alerted = true
+		self.alert_rate = self.alert_increase_rate
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
     elseif message_id == hash("contact_point_response") then

@@ -74,7 +74,7 @@ local function siphon(self, dt)
 	for k, id in pairs(self.ai_map) do
 		local ai_url = msg.url(nil, id, "chase_ai")
 		local ai_power = go.get(ai_url, "power_level")
-		local ai_alerted = go.get(ai_url, "alerted")
+		local ai_alerted = go.get(ai_url, "alert_level") > 0.0
 
 		if ai_power > 0 and ai_alerted == false then
 			go.set(ai_url, "power_level", ai_power - (self.siphon_drain_rate *dt))

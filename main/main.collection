@@ -59,26 +59,6 @@ collection_instances {
     z: 1.0
   }
 }
-collection_instances {
-  id: "ai1"
-  collection: "/ai/simple_ai.collection"
-  position {
-    x: 1018.191
-    y: 602.498
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 1.0
-    w: 6.123234E-17
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
 scale_along_z: 0
 embedded_instances {
   id: "camera"
