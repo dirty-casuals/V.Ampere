@@ -108,7 +108,9 @@ function update(self, dt)
 			if self.does_patrol then
 				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
 					self.target_pos = self.patrol_end_pos
-				elseif dist_to_target <= self.distance_to_give_up then
+				elseif self.target_pos == self.patrol_end_pos and dist_to_target <= self.distance_to_give_up then
+					self.target_pos = self.start_pos
+				elseif self.target_pos ~= self.patrol_end_pos then
 					self.target_pos = self.start_pos
 				end
 			else
