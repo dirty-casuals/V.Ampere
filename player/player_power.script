@@ -3,8 +3,7 @@ local constants = require "constants"
 go.property("power_level", 100.0)
 go.property("movement_drain", -40.0)
 go.property("extra_siphon_drain", -1.0)
-go.property("siphon_drain_rate", 10.0)
-go.property("enemy_increase", 10.0)
+go.property("siphon_drain_rate", 20.0)
 go.property("minimum_circle_scale", 1.0)
 go.property("max_power_level", 100.0)
 

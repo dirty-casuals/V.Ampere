@@ -6,7 +6,7 @@ go.property("speed", 100)
 go.property("power_level", 100.0)
 go.property("alerted", false)
 go.property("minimum_circle_scale", 0.5)
-go.property("siphon_drain_rate", 10.0)
+go.property("siphon_drain_rate", 30.0)
 
 local function scan(self)
 	local pos = go.get_position()
