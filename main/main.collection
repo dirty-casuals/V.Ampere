@@ -50,8 +50,19 @@ collection_instances {
   rotation {
     x: 0.0
     y: 0.0
-    z: 1.0
-    w: 6.123234E-17
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "chase_ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "315.322,1194.738,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
   }
   scale3 {
     x: 1.0

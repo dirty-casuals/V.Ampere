@@ -7,6 +7,7 @@ go.property("power_level", 100.0)
 go.property("alert_level", 0.0)
 go.property("minimum_circle_scale", 0.5)
 go.property("siphon_drain_rate", 30.0)
+go.property("patrol_end_pos", vmath.vector3(0,0,0))
 
 local function scan(self)
 	local pos = go.get_position()
@@ -26,13 +27,6 @@ end
 
 local function move_to_target(self, dt)
 	if self.target_pos ~= nil then
-		if vmath.length(go.get_position() - self.target_pos) <= self.distance_to_give_up then
-			if self.target_pos == self.start_pos then
-				self.target_pos = nil
-				return
-			end
-		end
-
 		local pos = go.get_position()
 		local target_angle = -math.atan2(self.target_pos.x - pos.x, self.target_pos.y - pos.y)
 		local target_quat = vmath.quat_rotation_z(target_angle)
@@ -75,7 +69,6 @@ function init(self)
 	self.projection_length = constants.TILE_SIZE * self.scan_distance_tiles
 	self.scan_angles =  {-math.pi / 6, math.pi / 6}
 	self.scan_for = {hash("robot"), hash("wall"), hash("player")}
-	self.target_pos = nil
 	self.start_pos = go.get_position()
 	self.siphoned = false
 	self.power_circle_start_scale = go.get_scale("circle")
@@ -84,6 +77,11 @@ function init(self)
 	self.alert_increase_rate = 30.0
 	self.alert_decrease_rate = -20.0
 	self.alert_rate = self.alert_decrease_rate
+	self.does_patrol =self.patrol_end_pos ~= vmath.vector3(0,0,0)
+	self.target_pos = nil
+	if self.does_patrol then
+		self.target_pos = self.patrol_end_pos
+	end
 	msg.post("circle", "disable")
 end
 
@@ -103,11 +101,26 @@ function update(self, dt)
 
 	if self.alert_level == 0.0 then
 		self.alerted = false
+		
 		if self.target_pos ~= nil then
-			self.target_pos = self.start_pos
+			local dist_to_target = vmath.length(go.get_position() - self.target_pos)
+	print(dist_to_target)
+			if self.does_patrol then
+				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
+					self.target_pos = self.patrol_end_pos
+				elseif dist_to_target <= self.distance_to_give_up then
+					self.target_pos = self.start_pos
+				end
+			else
+				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
+					self.target_pos = nil
+				else
+					self.target_pos = self.start_pos
+				end
+			end
 		end
 	end
-	print(self.alert_level)
+	print(self.target_pos)
 
 	if (self.alerted or self.alert_level > 0.0) and self.siphoned ~= true then
 		set_siphon_size(self)
