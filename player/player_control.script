@@ -66,7 +66,7 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash(constants.LISTEN_FIRE_PRESS) then
 		self.fire_listeners[#self.fire_listeners + 1] = sender
-	elseif message_id == hash("contact_point_response") and message.group == hash("wall") or message.group == hash("robot") then
+	elseif message_id == hash("contact_point_response") and message.group == hash("wall") then
 		go.set_position(go.get_position() + message.normal * message.distance)
 	end
 end
