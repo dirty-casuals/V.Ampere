@@ -1,6 +1,7 @@
 local constants = require "constants"
 
-go.property("scan_distance_tiles",  7)
+go.property("alerted_scan_distance_tiles",  9)
+go.property("scan_distance_tiles",  4)
 go.property("distance_to_give_up", 12.0)
 go.property("speed", 100)
 go.property("power_level", 100.0)
@@ -15,8 +16,13 @@ local function scan(self)
 
 	for angle = self.scan_angles[1], self.scan_angles[2], 0.1 do
 		local ray_angle = angle - rot
-		local new_y = math.cos(ray_angle) * self.projection_length
-		local new_x = math.sin(ray_angle) * self.projection_length
+		local scan_distance = self.scan_distance_tiles
+		if self.alert_level > 0.0 then
+			scan_distance = self.alerted_scan_distance_tiles
+		end
+		local projection_length = constants.TILE_SIZE * scan_distance
+		local new_y = math.cos(ray_angle) * projection_length
+		local new_x = math.sin(ray_angle) * projection_length
 
 		local new_vect = vmath.vector3(pos.x + new_x, pos.y + new_y, pos.z)
 
@@ -66,7 +72,6 @@ local function siphon_from_player(self, dt)
 end
 
 function init(self)
-	self.projection_length = constants.TILE_SIZE * self.scan_distance_tiles
 	self.scan_angles =  {-math.pi / 6, math.pi / 6}
 	self.scan_for = {hash("robot"), hash("wall"), hash("player")}
 	self.start_pos = go.get_position()
@@ -121,7 +126,6 @@ function update(self, dt)
 			end
 		end
 	end
-	print(self.target_pos)
 
 	if (self.alerted or self.alert_level > 0.0) and self.siphoned ~= true then
 		set_siphon_size(self)
