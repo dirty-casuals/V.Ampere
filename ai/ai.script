@@ -73,7 +73,7 @@ end
 
 function init(self)
 	self.scan_angles =  {-math.pi / 6, math.pi / 6}
-	self.scan_for = {hash("robot"), hash("wall"), hash("player")}
+	self.scan_for = {hash(constants.ROBOT), hash(constants.WALL), hash(constants.PLAYER)}
 	self.start_pos = go.get_position()
 	self.siphoned = false
 	self.power_circle_start_scale = go.get_scale("circle")
@@ -146,15 +146,15 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-    if message_id == hash("ray_cast_response") and message.group == hash("player") then
+    if message_id == hash("ray_cast_response") and message.group == hash(constants.PLAYER) then
         self.target_pos = message.position
 		self.alert_rate = self.alert_increase_rate
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
     elseif message_id == hash("contact_point_response") then
-		if message.group == hash("wall") or message.group == hash("robot") or message.group == hash("player") then
+		if message.group == hash(constants.WALL) or message.group == hash(constants.ROBOT) or message.group == hash(constants.PLAYER) then
 			go.set_position(go.get_position() + message.normal * message.distance)
-			if message.group == hash("player") then
+			if message.group == hash(constants.PLAYER) then
 				self.target_pos = message.position
 				self.alert_rate = self.alert_increase_rate
 			end

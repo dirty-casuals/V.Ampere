@@ -12,7 +12,13 @@ local constants = {
     ROBOT_COLLISION = "ROBOT_COLLISION",
     LISTEN_FIRE_PRESS = "LISTEN_FIRE_PRESS",
     FIRE_PRESS = "FIRE_PRESS",
-    FIRE_RELEASE = "FIRE_RELEASE"
+    FIRE_RELEASE = "FIRE_RELEASE",
+    NEW_HEALTH_BAR = "NEW_HEALTH_BAR",
+    UPDATE_HEALTH_BAR = "UPDATE_HEALTH_BAR",
+    AI_SCRIPT = "ai",
+    ROBOT = "robot",
+    PLAYER = "player",
+    WALL = "wall"
 }
 
 return constants
