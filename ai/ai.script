@@ -1,4 +1,5 @@
 local constants = require "constants"
+local camera = require "orthographic.camera"
 
 go.property("alerted_scan_distance_tiles",  9)
 go.property("scan_distance_tiles",  4)
@@ -132,20 +133,27 @@ function init(self)
 	if self.does_patrol then
 		self.target_pos = self.patrol_end_pos
 	end
+	self.screen_height = tonumber(sys.get_config("display.height"))
+	self.screen_width = tonumber(sys.get_config("display.width"))
+	self.normal_projection_length = constants.TILE_SIZE * self.scan_distance_tiles
 	msg.post("circle", "disable")
 end
 
 function update(self, dt)
-
+	local screen_pos = camera.world_to_screen(go.get_id("/ortho"), go.get_position())
+	local near_screen_x = screen_pos.x < self.screen_width + self.normal_projection_length and screen_pos.x > 0.0 
+	local near_screen_y = screen_pos.y < self.screen_height + self.normal_projection_length and screen_pos.y > 0.0 
+	local active = (near_screen_x and near_screen_y) or self.alert_level > 0.0
 	if self.siphoned ~= true then
-		scan(self)
+		if active then
+			scan(self)
+			update_siphon(self, dt)
+		end
 		move_to_target(self, dt)
+		update_target_pos(self)
 	end
 
 	update_power_level(self, dt)
-	update_target_pos(self)
-
-	update_siphon(self, dt)
 
 	--temporary
 	if self.power_level <= 0.0 then

@@ -6,7 +6,7 @@ go.property("linear_velocity", 200)
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	msg.post("/ortho", "follow", {camera_id = "/camera", target = go.get_id()})
+	camera.follow(go.get_id("/ortho"), go.get_id())
 	
 	self.move = 0
 	self.rotate = 0
@@ -15,7 +15,6 @@ end
 
 function final(self)
 	msg.post(".", "release_input_focus")
-	msg.post("/camera", "release_camera_focus")
 end
 
 function update(self, dt)
