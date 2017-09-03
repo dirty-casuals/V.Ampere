@@ -71,6 +71,51 @@ local function siphon_from_player(self, dt)
 	end
 end
 
+local function update_power_level(self, dt)
+	self.alert_level = self.alert_level + (self.alert_rate * dt)
+	if self.alert_level < 0.0 then
+		self.alert_level = 0.0
+	elseif self.alert_level > 100.0 then
+		self.alert_level = 100.0
+	end
+end
+
+local function update_target_pos(self)
+	if self.alert_level == 0.0 then
+		self.alerted = false
+		
+		if self.target_pos ~= nil then
+			local dist_to_target = vmath.length(go.get_position() - self.target_pos)
+			if self.does_patrol then
+				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
+					self.target_pos = self.patrol_end_pos
+				elseif self.target_pos == self.patrol_end_pos and dist_to_target <= self.distance_to_give_up then
+					self.target_pos = self.start_pos
+				elseif self.target_pos ~= self.patrol_end_pos then
+					self.target_pos = self.start_pos
+				end
+			else
+				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
+					self.target_pos = nil
+				else
+					self.target_pos = self.start_pos
+				end
+			end
+		end
+	end
+end
+
+local function update_siphon(self, dt)
+	if (self.alerted or self.alert_level > 0.0) and self.siphoned ~= true then
+		set_siphon_size(self)
+		msg.post("circle", "enable")
+
+		siphon_from_player(self, dt)
+	else
+		msg.post("circle", "disable")
+	end
+end
+
 function init(self)
 	self.scan_angles =  {-math.pi / 6, math.pi / 6}
 	self.scan_for = {hash(constants.ROBOT), hash(constants.WALL), hash(constants.PLAYER)}
@@ -97,50 +142,16 @@ function update(self, dt)
 		move_to_target(self, dt)
 	end
 
-	self.alert_level = self.alert_level + (self.alert_rate * dt)
-	if self.alert_level < 0.0 then
-		self.alert_level = 0.0
-	elseif self.alert_level > 100.0 then
-		self.alert_level = 100.0
-	end
+	update_power_level(self, dt)
+	update_target_pos(self)
 
-	if self.alert_level == 0.0 then
-		self.alerted = false
-		
-		if self.target_pos ~= nil then
-			local dist_to_target = vmath.length(go.get_position() - self.target_pos)
-			if self.does_patrol then
-				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
-					self.target_pos = self.patrol_end_pos
-				elseif self.target_pos == self.patrol_end_pos and dist_to_target <= self.distance_to_give_up then
-					self.target_pos = self.start_pos
-				elseif self.target_pos ~= self.patrol_end_pos then
-					self.target_pos = self.start_pos
-				end
-			else
-				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
-					self.target_pos = nil
-				else
-					self.target_pos = self.start_pos
-				end
-			end
-		end
-	end
+	update_siphon(self, dt)
 
-	if (self.alerted or self.alert_level > 0.0) and self.siphoned ~= true then
-		set_siphon_size(self)
-		msg.post("circle", "enable")
-
-		siphon_from_player(self, dt)
-	else
-		msg.post("circle", "disable")
-	end
-
+	--temporary
 	if self.power_level <= 0.0 then
 		go.delete()
 	end
 
-	-- self.alerted = false
 	self.alert_rate = self.alert_decrease_rate
 	self.siphoned = false
 end
