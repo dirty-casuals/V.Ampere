@@ -104,7 +104,6 @@ function update(self, dt)
 		
 		if self.target_pos ~= nil then
 			local dist_to_target = vmath.length(go.get_position() - self.target_pos)
-	print(dist_to_target)
 			if self.does_patrol then
 				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
 					self.target_pos = self.patrol_end_pos
@@ -149,7 +148,7 @@ function on_message(self, message_id, message, sender)
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
     elseif message_id == hash("contact_point_response") then
-		if message.group == hash("wall") then
+		if message.group == hash("wall") or message.group == hash("robot") or message.group == hash("player") then
 			go.set_position(go.get_position() + message.normal * message.distance)
 		end
 	end
