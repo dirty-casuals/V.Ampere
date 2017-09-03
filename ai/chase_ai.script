@@ -154,6 +154,10 @@ function on_message(self, message_id, message, sender)
     elseif message_id == hash("contact_point_response") then
 		if message.group == hash("wall") or message.group == hash("robot") or message.group == hash("player") then
 			go.set_position(go.get_position() + message.normal * message.distance)
+			if message.group == hash("player") then
+				self.target_pos = message.position
+				self.alert_rate = self.alert_increase_rate
+			end
 		end
 	end
 end
