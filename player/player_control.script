@@ -1,11 +1,12 @@
 local constants = require "constants"
+local camera = require "orthographic.camera"
 
 go.property("angular_velocity", 5)
 go.property("linear_velocity", 200)
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	msg.post("/camera", "acquire_camera_focus")
+	msg.post("/ortho", "follow", {camera_id = "/camera", target = go.get_id()})
 	
 	self.move = 0
 	self.rotate = 0
@@ -33,8 +34,6 @@ function update(self, dt)
 		pos = pos + direction
 		go.set_position(pos)
 	end
-	-- update camera position
-	go.set_position(pos + vmath.vector3(-568, - 320, 0), "/camera")
 end
 
 function on_input(self, action_id, action)
