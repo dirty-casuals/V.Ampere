@@ -15,7 +15,7 @@ local function scan(self)
 	local pos = go.get_position()
 	local rot = 2 * math.asin(go.get_rotation().z)
 
-	for angle = self.scan_angles[1], self.scan_angles[2], 0.1 do
+	for angle_idx, angle in pairs(self.scan_angles) do
 		local ray_angle = angle - rot
 		local scan_distance = self.scan_distance_tiles
 		if self.alert_level > 0.0 then
@@ -28,16 +28,98 @@ local function scan(self)
 		local new_vect = vmath.vector3(pos.x + new_x, pos.y + new_y, pos.z)
 
 		msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
-		physics.ray_cast(pos, new_vect, self.scan_for)
+		physics.ray_cast(pos, new_vect, self.scan_for, angle_idx)
 	end
 end
 
 local function move_to_target(self, dt)
 	if self.target_pos ~= nil then
 		local pos = go.get_position()
+		local current_quat = go.get_rotation()
 		local target_angle = -math.atan2(self.target_pos.x - pos.x, self.target_pos.y - pos.y)
 		local target_quat = vmath.quat_rotation_z(target_angle)
-		local current_quat = go.get_rotation()
+		local avoid = {left = false, right = false, straight = false}
+
+		local angle_diff = current_quat.z - target_quat.z
+		local avoid_angle = nil
+
+		for idx, obstacle in pairs(self.obstacle_map) do
+			if obstacle then
+				local angle = self.scan_angles[idx]
+				if angle < 0.0 then
+					avoid_angle = -(math.pi / 2) + target_angle
+					avoid.left = true
+				elseif angle > 0.0 then
+					avoid_angle = (math.pi / 2) - target_angle
+					avoid.right = true
+				else
+					avoid_angle = math.pi
+					avoid.straight = true
+				end
+			end
+		end
+
+		-- local avoid_angle = nil
+
+		-- if avoid.right and avoid.left then
+		-- 	-- avoid_angle = angle_diff + math.pi
+		-- 	-- if avoid_angle > math.pi or avoid_angle < -math.pi then
+		-- 	-- 	avoid_angle = -math.pi + (avoid_angle - math.pi)
+		-- 	-- end
+		-- 	avoid_angle = 0
+		-- elseif avoid.right then
+		-- 	if angle_diff < 0.0 then
+		-- 		if angle_diff > -math.pi / 2 then
+		-- 			avoid_angle = -math.pi / 2 --(-math.pi - angle_diff) - (-math.pi / 2)
+		-- 		else
+		-- 			avoid_angle = 0 ---math.pi - angle_diff
+		-- 		end
+		-- 	else
+		-- 		if angle_diff > math.pi / 2 then
+		-- 			avoid_angle = math.pi / 2---((math.pi / 2) - (math.pi - angle_diff))
+		-- 		else
+		-- 			avoid_angle = math.pi---angle_diff
+		-- 		end
+		-- 	end
+		-- elseif avoid.left then
+		-- 	if angle_diff < 0.0 then
+		-- 		if angle_diff > -math.pi / 2 then
+		-- 			avoid_angle = 0---angle_diff
+		-- 		else
+		-- 			avoid_angle = math.pi / 2---((-math.pi / 2) + (-math.pi - angle_diff))
+		-- 		end
+		-- 	else
+		-- 		if angle_diff > math.pi / 2 then
+		-- 			avoid_angle = -math.pi / 2--angle_diff + (math.pi - angle_diff)
+		-- 		else
+		-- 			avoid_angle = -math.pi--angle_diff + ((math.pi / 2) - angle_diff)
+		-- 		end
+		-- 	end
+		-- end
+
+		-- print("diff " .. math.deg(current_quat.z))
+		-- print(math.deg(target_quat.z))
+		-- print(math.deg(avoid_angle) .. " void")
+		-- pprint(avoid_angle)
+		-- print(math.deg(angle_diff))
+
+		-- if avoid_angle ~= nil then
+		-- 	print(math.deg(avoid_angle) .. " void")
+		-- 	target_angle = target_angle + avoid_angle
+		-- end
+		-- target_angle = target_angle + avoid_angle
+
+
+		-- if target_angle < 0.0 then
+		-- 	if target_angle < -math.pi / 2 then
+
+		-- 	else
+
+		-- 	end
+		-- else
+
+		-- end
+		target_quat = vmath.quat_rotation_z(target_angle)
 
 		local q = vmath.slerp(0.08, current_quat, target_quat)
 		go.set_rotation(q)
@@ -117,8 +199,13 @@ local function update_siphon(self, dt)
 	end
 end
 
+local function reset_obstacle_map(self)
+	for k, v in pairs(self.obstacle_map) do
+		self.obstacle_map[k] = false
+	end
+end
+
 function init(self)
-	self.scan_angles =  {-math.pi / 6, math.pi / 6}
 	self.scan_for = {hash(constants.ROBOT), hash(constants.WALL), hash(constants.PLAYER)}
 	self.start_pos = go.get_position()
 	self.siphoned = false
@@ -138,6 +225,12 @@ function init(self)
 	self.normal_projection_length = constants.TILE_SIZE * self.scan_distance_tiles
 	self.was_active = false
 	self.color = vmath.vector3(math.random(255), math.random(255), math.random(255))
+	self.obstacle_map = {}
+	self.scan_angles = {}
+	for angle = -math.pi / 6, (math.pi / 6) + 0.01, 0.174533 do
+		self.obstacle_map[#self.obstacle_map + 1] = false
+		self.scan_angles[#self.scan_angles + 1] = angle
+	end
 	msg.post("circle", "disable")
 end
 
@@ -179,12 +272,19 @@ function update(self, dt)
 	self.alert_rate = self.alert_decrease_rate
 	self.siphoned = false
 	self.was_active = active
+	reset_obstacle_map(self)
 end
 
 function on_message(self, message_id, message, sender)
-    if message_id == hash("ray_cast_response") and message.group == hash(constants.PLAYER) then
-        self.target_pos = message.position
-		self.alert_rate = self.alert_increase_rate
+    if message_id == hash("ray_cast_response") then
+		if message.group == hash(constants.PLAYER) then
+			self.target_pos = message.position
+			self.alert_rate = self.alert_increase_rate
+		elseif message.group == hash(constants.WALL) then
+			if vmath.length(go.get_position() - message.position) <= constants.TILE_SIZE * 2 then
+				self.obstacle_map[message.request_id] = true
+			end
+		end
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
     elseif message_id == hash("contact_point_response") then
