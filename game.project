@@ -3,7 +3,7 @@ title = LD39
 dependencies = 
 
 [bootstrap]
-main_collection = /main/main.collectionc
+main_collection = /controller/controller.collectionc
 
 [input]
 game_binding = /input/game.input_bindingc
