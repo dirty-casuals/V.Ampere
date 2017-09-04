@@ -18,7 +18,12 @@ local constants = {
     AI_SCRIPT = "ai",
     ROBOT = "robot",
     PLAYER = "player",
-    WALL = "wall"
+    WALL = "wall",
+    REGISTER_POWER_BAR = "REGISTER_POWER_BAR",
+    UNREGISTER_POWER_BAR = "UNREGISTER_POWER_BAR",
+    AI_POWER_UPDATE = "AI_POWER_UPDATE",
+    REGISTER_NEW_COLOR = "REGISTER_NEW_COLOR",
+    GRANT_NEW_COLOR = "GRANT_NEW_COLOR"
 }
 
 return constants
