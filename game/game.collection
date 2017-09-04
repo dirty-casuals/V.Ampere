@@ -1,4 +1,24 @@
 name: "game"
+instances {
+  id: "ortho"
+  prototype: "/orthographic/camera.go"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 collection_instances {
   id: "level1"
   collection: "/levels/level1.collection"
@@ -43,7 +63,7 @@ collection_instances {
   id: "ai"
   collection: "/ai/simple_ai.collection"
   position {
-    x: 315.322
+    x: 315.0
     y: 602.498
     z: 0.0
   }
@@ -56,10 +76,10 @@ collection_instances {
   instance_properties {
     id: "ai"
     properties {
-      id: "chase_ai"
+      id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "315.322,1194.738,0.0"
+        value: "315.0,1400.0,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -70,18 +90,32 @@ collection_instances {
     z: 1.0
   }
 }
+collection_instances {
+  id: "ai1"
+  collection: "/ai/simple_ai.collection"
+  position {
+    x: 841.632
+    y: 602.498
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 scale_along_z: 0
 embedded_instances {
-  id: "camera"
-  data: "embedded_components {\n"
-  "  id: \"camera\"\n"
-  "  type: \"camera\"\n"
-  "  data: \"aspect_ratio: 1.0\\n"
-  "fov: 45.0\\n"
-  "near_z: 0.1\\n"
-  "far_z: 1000.0\\n"
-  "auto_aspect_ratio: 0\\n"
-  "\"\n"
+  id: "gui"
+  data: "components {\n"
+  "  id: \"hud\"\n"
+  "  component: \"/gui/hud.gui\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
@@ -113,23 +147,9 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "gui"
-  data: "components {\n"
-  "  id: \"hud\"\n"
-  "  component: \"/gui/hud.gui\"\n"
-  "  position {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  ""
+  id: "camera"
+  children: "ortho"
+  data: ""
   position {
     x: 0.0
     y: 0.0

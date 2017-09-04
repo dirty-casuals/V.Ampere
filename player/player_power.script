@@ -1,5 +1,7 @@
 local constants = require "constants"
 
+local POWER_LEVEL = 
+
 go.property("power_level", 100.0)
 go.property("movement_drain", -40.0)
 go.property("extra_siphon_drain", -1.0)
@@ -52,7 +54,7 @@ local function siphon_scan(self)
 			local new_vect = vmath.vector3(pos.x + new_x, pos.y + new_y, pos.z)
 
 			-- msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
-			physics.ray_cast(pos, new_vect, {hash("robot")})
+			physics.ray_cast(pos, new_vect, {hash(constants.ROBOT)})
 		end
 
 	end
@@ -72,7 +74,7 @@ end
 
 local function siphon(self, dt)
 	for k, id in pairs(self.ai_map) do
-		local ai_url = msg.url(nil, id, "chase_ai")
+		local ai_url = msg.url(nil, id, constants.AI_SCRIPT)
 		local ai_power = go.get(ai_url, "power_level")
 		local ai_alerted = go.get(ai_url, "alert_level") > 0.0
 
@@ -120,7 +122,7 @@ function on_message(self, message_id, message, sender)
 		toggle_power_drain(self, true)
 	elseif message_id == hash(constants.FIRE_RELEASE) then
 		toggle_power_drain(self, false)
-    elseif message_id == hash("ray_cast_response") and message.group == hash("robot") then
+    elseif message_id == hash("ray_cast_response") and message.group == hash(constants.ROBOT) then
 		if self.ai_map[message.id] == nil then
 			self.ai_map[message.id] = message.id
 		end

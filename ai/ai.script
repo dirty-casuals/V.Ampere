@@ -1,4 +1,5 @@
 local constants = require "constants"
+local camera = require "orthographic.camera"
 
 go.property("alerted_scan_distance_tiles",  9)
 go.property("scan_distance_tiles",  4)
@@ -71,39 +72,16 @@ local function siphon_from_player(self, dt)
 	end
 end
 
-function init(self)
-	self.scan_angles =  {-math.pi / 6, math.pi / 6}
-	self.scan_for = {hash("robot"), hash("wall"), hash("player")}
-	self.start_pos = go.get_position()
-	self.siphoned = false
-	self.power_circle_start_scale = go.get_scale("circle")
-	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
-	self.alert_level = 0.0
-	self.alert_increase_rate = 30.0
-	self.alert_decrease_rate = -20.0
-	self.alert_rate = self.alert_decrease_rate
-	self.does_patrol =self.patrol_end_pos ~= vmath.vector3(0,0,0)
-	self.target_pos = nil
-	if self.does_patrol then
-		self.target_pos = self.patrol_end_pos
-	end
-	msg.post("circle", "disable")
-end
-
-function update(self, dt)
-
-	if self.siphoned ~= true then
-		scan(self)
-		move_to_target(self, dt)
-	end
-
+local function update_power_level(self, dt)
 	self.alert_level = self.alert_level + (self.alert_rate * dt)
 	if self.alert_level < 0.0 then
 		self.alert_level = 0.0
 	elseif self.alert_level > 100.0 then
 		self.alert_level = 100.0
 	end
+end
 
+local function update_target_pos(self)
 	if self.alert_level == 0.0 then
 		self.alerted = false
 		
@@ -126,7 +104,9 @@ function update(self, dt)
 			end
 		end
 	end
+end
 
+local function update_siphon(self, dt)
 	if (self.alerted or self.alert_level > 0.0) and self.siphoned ~= true then
 		set_siphon_size(self)
 		msg.post("circle", "enable")
@@ -135,26 +115,82 @@ function update(self, dt)
 	else
 		msg.post("circle", "disable")
 	end
+end
 
-	if self.power_level <= 0.0 then
-		go.delete()
+function init(self)
+	self.scan_angles =  {-math.pi / 6, math.pi / 6}
+	self.scan_for = {hash(constants.ROBOT), hash(constants.WALL), hash(constants.PLAYER)}
+	self.start_pos = go.get_position()
+	self.siphoned = false
+	self.power_circle_start_scale = go.get_scale("circle")
+	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
+	self.alert_level = 0.0
+	self.alert_increase_rate = 30.0
+	self.alert_decrease_rate = -20.0
+	self.alert_rate = self.alert_decrease_rate
+	self.does_patrol =self.patrol_end_pos ~= vmath.vector3(0,0,0)
+	self.target_pos = nil
+	if self.does_patrol then
+		self.target_pos = self.patrol_end_pos
+	end
+	self.screen_height = tonumber(sys.get_config("display.height"))
+	self.screen_width = tonumber(sys.get_config("display.width"))
+	self.normal_projection_length = constants.TILE_SIZE * self.scan_distance_tiles
+	self.was_active = false
+	self.color = vmath.vector3(math.random(255), math.random(255), math.random(255))
+	msg.post("circle", "disable")
+end
+
+function update(self, dt)
+	local screen_pos = camera.world_to_screen(go.get_id("/ortho"), go.get_position())
+	local near_screen_x = screen_pos.x < self.screen_width + self.normal_projection_length and screen_pos.x > 0.0 
+	local near_screen_y = screen_pos.y < self.screen_height + self.normal_projection_length and screen_pos.y > 0.0 
+	local active = (near_screen_x and near_screen_y) or self.alert_level > 0.0
+
+	if active ~= self.was_active then
+		if active then
+			msg.post("/gui#hud", constants.REGISTER_POWER_BAR, {id = go.get_id(), color = self.color})
+		else
+			msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
+		end
 	end
 
-	-- self.alerted = false
+	if active then
+		msg.post("/gui#hud", constants.AI_POWER_UPDATE, {id = go.get_id(), power_level = self.power_level})
+		if self.siphoned ~= true then
+			scan(self)
+			update_siphon(self, dt)
+		end
+	end
+
+	if self.siphoned ~= true then
+		move_to_target(self, dt)
+		update_target_pos(self)
+	end
+
+	update_power_level(self, dt)
+
+	--temporary
+	if self.power_level <= 0.0 then
+		go.delete()
+		msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
+	end
+
 	self.alert_rate = self.alert_decrease_rate
 	self.siphoned = false
+	self.was_active = active
 end
 
 function on_message(self, message_id, message, sender)
-    if message_id == hash("ray_cast_response") and message.group == hash("player") then
+    if message_id == hash("ray_cast_response") and message.group == hash(constants.PLAYER) then
         self.target_pos = message.position
 		self.alert_rate = self.alert_increase_rate
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
     elseif message_id == hash("contact_point_response") then
-		if message.group == hash("wall") or message.group == hash("robot") or message.group == hash("player") then
+		if message.group == hash(constants.WALL) or message.group == hash(constants.ROBOT) or message.group == hash(constants.PLAYER) then
 			go.set_position(go.get_position() + message.normal * message.distance)
-			if message.group == hash("player") then
+			if message.group == hash(constants.PLAYER) and not self.siphoned then
 				self.target_pos = message.position
 				self.alert_rate = self.alert_increase_rate
 			end

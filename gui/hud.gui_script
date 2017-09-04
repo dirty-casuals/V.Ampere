@@ -1,19 +1,68 @@
 local constants = require "constants"
 
-local function update_power_level(self, new_power_level)
-	local new_power = (new_power_level / 100) * self.start_power_size.x
-	local new_size = vmath.vector3(new_power, self.start_power_size.y, self.start_power_size.z)
-	gui.animate(self.health, "size", new_size, gui.EASING_LINEAR, 0.2, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
+local AI_POWER_TEMPLATE = "ai_power_template"
+
+local function update_power_level(self, node, start_power_size, new_power_level)
+	local new_power = (new_power_level / 100) * start_power_size.x
+	local new_size = vmath.vector3(new_power, start_power_size.y, start_power_size.z)
+	gui.animate(node, "size", new_size, gui.EASING_LINEAR, 0.2, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
+end
+
+local function reload_power_bars(self)
+	local idx = 0
+	for id, node in pairs(self.power_bars) do
+		local position = vmath.vector3(self.ai_start_power_position)
+		position.y = self.ai_start_power_position.y - ((self.ai_start_power_size.y + 5) * idx)
+		gui.animate(node, "position", position, gui.EASING_LINEAR, 0.2, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
+
+		idx = idx + 1
+	end
 end
 
 function init(self)
-	self.health = gui.get_node("power")
-	self.start_power_size = gui.get_size(self.health)
+	self.player_power = gui.get_node("power")
+	self.start_power_size = gui.get_size(self.player_power)
+	self.ai_power_template = gui.get_node(AI_POWER_TEMPLATE)
+	self.ai_start_power_size = gui.get_size(self.ai_power_template)
+	self.ai_start_power_position = gui.get_position(self.ai_power_template)
+	gui.set_enabled(self.ai_power_template, false)
 	msg.post("/player/player", constants.LISTEN_POWER_UPDATE)
+
+	self.number_power_bars = 0
+	self.power_bars = {}
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash(constants.POWER_UPDATE) then
-		update_power_level(self, message.power_level)
+		update_power_level(self, self.player_power, self.start_power_size, message.power_level)
+	elseif message_id == hash(constants.REGISTER_POWER_BAR) then
+		local id = message.id
+		if self.power_bars[message.id] ~= nil then
+			return
+		end
+
+		local node = gui.clone(self.ai_power_template)
+		local position = vmath.vector3(self.ai_start_power_position)
+
+		position.y = self.ai_start_power_position.y - ((self.ai_start_power_size.y + 5) * self.number_power_bars)
+
+		gui.set_id(node, id)
+		gui.set_enabled(node, true)
+		gui.set_position(node, position)
+		gui.set_color(node, message.color)
+		self.power_bars[id] = node
+		self.number_power_bars = self.number_power_bars + 1
+	elseif message_id == hash(constants.UNREGISTER_POWER_BAR) then
+		local id = message.id
+		local node = gui.get_node(id)
+		gui.delete_node(node)
+		self.power_bars[id] = nil
+		self.number_power_bars = self.number_power_bars - 1
+
+		reload_power_bars(self)
+	elseif message_id == hash(constants.AI_POWER_UPDATE) then
+		local id = message.id
+		local node = gui.get_node(id)
+		update_power_level(self, node, self.ai_start_power_size, message.power_level)
 	end
 end

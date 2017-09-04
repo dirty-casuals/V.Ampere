@@ -1,11 +1,12 @@
 local constants = require "constants"
+local camera = require "orthographic.camera"
 
 go.property("angular_velocity", 5)
 go.property("linear_velocity", 200)
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	msg.post("/camera", "acquire_camera_focus")
+	camera.follow(go.get_id("/ortho"), go.get_id())
 	
 	self.move = 0
 	self.rotate = 0
@@ -14,7 +15,6 @@ end
 
 function final(self)
 	msg.post(".", "release_input_focus")
-	msg.post("/camera", "release_camera_focus")
 end
 
 function update(self, dt)
@@ -33,8 +33,6 @@ function update(self, dt)
 		pos = pos + direction
 		go.set_position(pos)
 	end
-	-- update camera position
-	go.set_position(pos + vmath.vector3(-568, - 320, 0), "/camera")
 end
 
 function on_input(self, action_id, action)
@@ -66,7 +64,7 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash(constants.LISTEN_FIRE_PRESS) then
 		self.fire_listeners[#self.fire_listeners + 1] = sender
-	elseif message_id == hash("contact_point_response") and message.group == hash("wall") then
+	elseif message_id == hash("contact_point_response") and message.group == hash(constants.WALL) then
 		go.set_position(go.get_position() + message.normal * message.distance)
 	end
 end
