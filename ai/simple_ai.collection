@@ -32,6 +32,11 @@ embedded_instances {
   "    z: 0.0\n"
   "    w: 1.0\n"
   "  }\n"
+  "  properties {\n"
+  "    id: \"minimum_circle_scale\"\n"
+  "    value: \"2.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"robotcollision\"\n"
@@ -153,8 +158,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 1.5
-    y: 1.5
+    x: 3.0
+    y: 3.0
     z: 1.0
   }
 }

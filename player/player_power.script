@@ -28,17 +28,6 @@ local function update_power(self, drain, method)
 	if self.power_level > self.max_power_level then
 		return
 	end
-	send_power_update(self)
-
-	if self.power_level <= 0 then
-		self.power_level = 0
-		send_power_outage(self)
-	end
-
-	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
-	local scale_vect = vmath.vector3(scale, scale, scale)
-	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
-	go.set_scale(lerped_vect, "circle")
 end
 
 local function siphon_scan(self)
@@ -87,6 +76,20 @@ local function siphon(self, dt)
 	end
 end
 
+local function update_power_bar(self)
+	send_power_update(self)
+
+	if self.power_level <= 0 then
+		self.power_level = 0
+		send_power_outage(self)
+	end
+
+	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
+	local scale_vect = vmath.vector3(scale, scale, scale)
+	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
+	go.set_scale(lerped_vect, "circle")
+end
+
 function init(self)
 	self.prev_pos = go.get_world_position()
 	self.power_outage_listeners = {}
@@ -108,6 +111,7 @@ function update(self, dt)
 		update_power(self, self.movement_drain * dt)
 		self.prev_pos = go.get_world_position()
 	end
+	update_power_bar(self)
 
 	siphon_scan(self)
 	siphon(self, dt)

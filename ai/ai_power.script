@@ -4,6 +4,9 @@ local camera = require "orthographic.camera"
 go.property("minimum_circle_scale", 0.5)
 go.property("siphon_drain_rate", 30.0)
 go.property("power_level", 100.0)
+go.property("max_power_level", 100.0)
+go.property("max_siphon_size", 1.5)
+go.property("min_siphon_size", 1.0)
 
 local function set_siphon_size(self)
 	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
@@ -47,8 +50,10 @@ function init(self)
 	self.screen_height = tonumber(sys.get_config("display.height"))
 	self.screen_width = tonumber(sys.get_config("display.width"))
 	self.was_active = false
-	self.color = vmath.vector3(math.random(255), math.random(255), math.random(255))
+	self.color = vmath.vector4(math.random(), math.random(), math.random(), 1)
 	msg.post("circle", "disable")
+	sprite.set_constant("circle", "tint", self.color)
+	sprite.set_constant("#sprite", "tint", self.color)
 end
 
 function update(self, dt)
@@ -66,6 +71,9 @@ function update(self, dt)
 	end
 
 	if active then
+		if self.power_level > self.max_power_level then
+			self.power_level = self.max_power_level
+		end
 		msg.post("/gui#hud", constants.AI_POWER_UPDATE, {id = go.get_id(), power_level = self.power_level})
 		if go.get(self.ai_script_url, "siphoned") ~= true then
 			update_siphon(self, dt)
@@ -79,19 +87,4 @@ function update(self, dt)
 	end
 
 	self.was_active = active
-end
-
-function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Remove this function if not needed
-end
-
-function on_input(self, action_id, action)
-	-- Add input-handling code here
-	-- Remove this function if not needed
-end
-
-function on_reload(self)
-	-- Add reload-handling code here
-	-- Remove this function if not needed
 end
