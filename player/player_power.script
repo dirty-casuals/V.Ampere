@@ -74,12 +74,13 @@ end
 
 local function siphon(self, dt)
 	for k, id in pairs(self.ai_map) do
+		local ai_power_url = msg.url(nil, id, constants.AI_POWER_SCRIPT)
 		local ai_url = msg.url(nil, id, constants.AI_SCRIPT)
-		local ai_power = go.get(ai_url, "power_level")
+		local ai_power = go.get(ai_power_url, "power_level")
 		local ai_alerted = go.get(ai_url, "alert_level") > 0.0
 
 		if ai_power > 0 and ai_alerted == false then
-			go.set(ai_url, "power_level", ai_power - (self.siphon_drain_rate *dt))
+			go.set(ai_power_url, "power_level", ai_power - (self.siphon_drain_rate *dt))
 			msg.post(ai_url, constants.PLAYER_SIPHON)
 			update_power(self, self.siphon_drain_rate * dt)
 		end

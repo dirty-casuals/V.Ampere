@@ -5,10 +5,8 @@ go.property("alerted_scan_distance_tiles",  9)
 go.property("scan_distance_tiles",  4)
 go.property("distance_to_give_up", 12.0)
 go.property("speed", 100)
-go.property("power_level", 100.0)
+go.property("siphoned", false)
 go.property("alert_level", 0.0)
-go.property("minimum_circle_scale", 0.5)
-go.property("siphon_drain_rate", 30.0)
 go.property("patrol_end_pos", vmath.vector3(0,0,0))
 
 local function scan(self)
@@ -130,39 +128,6 @@ local function move_to_target(self, dt)
 	end
 end
 
-local function set_siphon_size(self)
-	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
-	local scale_vect = vmath.vector3(scale, scale, scale)
-	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
-	go.set_scale(lerped_vect, "circle")
-end
-
-local function siphon_from_player(self, dt)
-	local player_pos = go.get_position("/player/player")
-	local dist_to_player = vmath.length(go.get_position() - player_pos)
-	local circle_size = go.get("circle#circle", "size")
-	local circle_scale = go.get_scale("circle").x / self.power_circle_start_scale.x
-	local circle_factor = circle_size.x * circle_scale
-	if dist_to_player <= circle_factor then
-		local player_url = msg.url(nil, "/player/player", "player_power")
-		local player_power = go.get(player_url, "power_level")
-
-		if player_power > 0 then
-			go.set(player_url, "power_level", player_power - (self.siphon_drain_rate *dt))
-			self.power_level = self.power_level +  (self.siphon_drain_rate *dt)
-		end
-	end
-end
-
-local function update_power_level(self, dt)
-	self.alert_level = self.alert_level + (self.alert_rate * dt)
-	if self.alert_level < 0.0 then
-		self.alert_level = 0.0
-	elseif self.alert_level > 100.0 then
-		self.alert_level = 100.0
-	end
-end
-
 local function update_target_pos(self)
 	if self.alert_level == 0.0 then
 		self.alerted = false
@@ -188,20 +153,18 @@ local function update_target_pos(self)
 	end
 end
 
-local function update_siphon(self, dt)
-	if (self.alerted or self.alert_level > 0.0) and self.siphoned ~= true then
-		set_siphon_size(self)
-		msg.post("circle", "enable")
-
-		siphon_from_player(self, dt)
-	else
-		msg.post("circle", "disable")
-	end
-end
-
 local function reset_obstacle_map(self)
 	for k, v in pairs(self.obstacle_map) do
 		self.obstacle_map[k] = false
+	end
+end
+
+local function update_power_level(self, dt)
+	self.alert_level = self.alert_level + (self.alert_rate * dt)
+	if self.alert_level < 0.0 then
+		self.alert_level = 0.0
+	elseif self.alert_level > 100.0 then
+		self.alert_level = 100.0
 	end
 end
 
@@ -209,8 +172,6 @@ function init(self)
 	self.scan_for = {hash(constants.ROBOT), hash(constants.WALL), hash(constants.PLAYER)}
 	self.start_pos = go.get_position()
 	self.siphoned = false
-	self.power_circle_start_scale = go.get_scale("circle")
-	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
 	self.alert_level = 0.0
 	self.alert_increase_rate = 30.0
 	self.alert_decrease_rate = -20.0
@@ -224,14 +185,12 @@ function init(self)
 	self.screen_width = tonumber(sys.get_config("display.width"))
 	self.normal_projection_length = constants.TILE_SIZE * self.scan_distance_tiles
 	self.was_active = false
-	self.color = vmath.vector3(math.random(255), math.random(255), math.random(255))
 	self.obstacle_map = {}
 	self.scan_angles = {}
 	for angle = -math.pi / 6, (math.pi / 6) + 0.01, 0.174533 do
 		self.obstacle_map[#self.obstacle_map + 1] = false
 		self.scan_angles[#self.scan_angles + 1] = angle
 	end
-	msg.post("circle", "disable")
 end
 
 function update(self, dt)
@@ -240,20 +199,9 @@ function update(self, dt)
 	local near_screen_y = screen_pos.y < self.screen_height + self.normal_projection_length and screen_pos.y > 0.0 
 	local active = (near_screen_x and near_screen_y) or self.alert_level > 0.0
 
-	if active ~= self.was_active then
-		if active then
-			msg.post("/gui#hud", constants.REGISTER_POWER_BAR, {id = go.get_id(), color = self.color})
-		else
-			msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
-		end
-	end
 
-	if active then
-		msg.post("/gui#hud", constants.AI_POWER_UPDATE, {id = go.get_id(), power_level = self.power_level})
-		if self.siphoned ~= true then
-			scan(self)
-			update_siphon(self, dt)
-		end
+	if active and self.siphoned ~= true then
+		scan(self)
 	end
 
 	if self.siphoned ~= true then
@@ -262,12 +210,6 @@ function update(self, dt)
 	end
 
 	update_power_level(self, dt)
-
-	--temporary
-	if self.power_level <= 0.0 then
-		go.delete()
-		msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
-	end
 
 	self.alert_rate = self.alert_decrease_rate
 	self.siphoned = false

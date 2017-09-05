@@ -1,0 +1,97 @@
+local constants = require "constants"
+local camera = require "orthographic.camera"
+
+go.property("minimum_circle_scale", 0.5)
+go.property("siphon_drain_rate", 30.0)
+go.property("power_level", 100.0)
+
+local function set_siphon_size(self)
+	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
+	local scale_vect = vmath.vector3(scale, scale, scale)
+	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
+	go.set_scale(lerped_vect, "circle")
+end
+
+local function siphon_from_player(self, dt)
+	local player_pos = go.get_position("/player/player")
+	local dist_to_player = vmath.length(go.get_position() - player_pos)
+	local circle_size = go.get("circle#circle", "size")
+	local circle_scale = go.get_scale("circle").x / self.power_circle_start_scale.x
+	local circle_factor = circle_size.x * circle_scale
+	if dist_to_player <= circle_factor then
+		local player_url = msg.url(nil, "/player/player", "player_power")
+		local player_power = go.get(player_url, "power_level")
+
+		if player_power > 0 then
+			go.set(player_url, "power_level", player_power - (self.siphon_drain_rate *dt))
+			self.power_level = self.power_level +  (self.siphon_drain_rate *dt)
+		end
+	end
+end
+
+local function update_siphon(self, dt)
+	if (go.get(self.ai_script_url, "alert_level") > 0.0) and go.get(self.ai_script_url, "siphoned") ~= true then
+		set_siphon_size(self)
+		msg.post("circle", "enable")
+
+		siphon_from_player(self, dt)
+	else
+		msg.post("circle", "disable")
+	end
+end
+
+function init(self)
+	self.ai_script_url = msg.url(nil, id, constants.AI_SCRIPT)
+	self.power_circle_start_scale = go.get_scale("circle")
+	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
+	self.screen_height = tonumber(sys.get_config("display.height"))
+	self.screen_width = tonumber(sys.get_config("display.width"))
+	self.was_active = false
+	self.color = vmath.vector3(math.random(255), math.random(255), math.random(255))
+	msg.post("circle", "disable")
+end
+
+function update(self, dt)
+	local screen_pos = camera.world_to_screen(go.get_id("/ortho"), go.get_position())
+	local in_screen_x = screen_pos.x < self.screen_width and screen_pos.x > 0.0 
+	local in_screen_y = screen_pos.y < self.screen_height and screen_pos.y > 0.0 
+	local active = in_screen_x and in_screen_y
+
+	if active ~= self.was_active then
+		if active then
+			msg.post("/gui#hud", constants.REGISTER_POWER_BAR, {id = go.get_id(), color = self.color})
+		else
+			msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
+		end
+	end
+
+	if active then
+		msg.post("/gui#hud", constants.AI_POWER_UPDATE, {id = go.get_id(), power_level = self.power_level})
+		if go.get(self.ai_script_url, "siphoned") ~= true then
+			update_siphon(self, dt)
+		end
+	end
+
+	--temporary
+	if self.power_level <= 0.0 then
+		go.delete()
+		msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
+	end
+
+	self.was_active = active
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

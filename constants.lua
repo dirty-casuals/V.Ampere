@@ -16,6 +16,7 @@ local constants = {
     NEW_HEALTH_BAR = "NEW_HEALTH_BAR",
     UPDATE_HEALTH_BAR = "UPDATE_HEALTH_BAR",
     AI_SCRIPT = "ai",
+    AI_POWER_SCRIPT = "ai_power",
     ROBOT = "robot",
     PLAYER = "player",
     WALL = "wall",
