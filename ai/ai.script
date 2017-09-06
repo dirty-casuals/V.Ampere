@@ -16,8 +16,10 @@ local function scan(self)
 	for angle_idx, angle in pairs(self.scan_angles) do
 		local ray_angle = angle - rot
 		local scan_distance = self.scan_distance_tiles
+		local cone_scale = self.scan_distance_tiles
 		if self.alert_level > 0.0 then
 			scan_distance = self.alerted_scan_distance_tiles
+			cone_scale = self.alerted_scan_distance_tiles
 		end
 		local projection_length = constants.TILE_SIZE * scan_distance
 		local new_y = math.cos(ray_angle) * projection_length
@@ -27,6 +29,7 @@ local function scan(self)
 
 		msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
 		physics.ray_cast(pos, new_vect, self.scan_for, angle_idx)
+		go.set_scale(vmath.vector3(cone_scale, cone_scale, 1.0), "cone")
 	end
 end
 
@@ -199,8 +202,10 @@ function update(self, dt)
 	local near_screen_y = screen_pos.y < self.screen_height + self.normal_projection_length and screen_pos.y > 0.0 
 	local active = (near_screen_x and near_screen_y) or self.alert_level > 0.0
 
-
-	if active and self.siphoned ~= true then
+	if self.siphoned == true then
+		msg.post("cone", "disable")
+	elseif active or self.siphoned ~= true then
+		msg.post("cone", "enable")
 		scan(self)
 	end
 

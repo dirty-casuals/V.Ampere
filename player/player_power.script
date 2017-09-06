@@ -26,7 +26,7 @@ end
 local function update_power(self, drain, method)
 	self.power_level = self.power_level + drain
 	if self.power_level > self.max_power_level then
-		return
+		self.power_level = self.max_power_level
 	end
 end
 
@@ -45,7 +45,6 @@ local function siphon_scan(self)
 			-- msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
 			physics.ray_cast(pos, new_vect, {hash(constants.ROBOT)})
 		end
-
 	end
 end
 
@@ -68,9 +67,13 @@ local function siphon(self, dt)
 		local ai_power = go.get(ai_power_url, "power_level")
 		local ai_alerted = go.get(ai_url, "alert_level") > 0.0
 
-		if ai_power > 0 and ai_alerted == false then
-			go.set(ai_power_url, "power_level", ai_power - (self.siphon_drain_rate *dt))
-			msg.post(ai_url, constants.PLAYER_SIPHON)
+		if ai_power > 0.0 and ai_alerted == false then
+			local new_power = ai_power - (self.siphon_drain_rate *dt)
+			go.set(ai_power_url, "power_level", new_power)
+
+			if new_power > 0.0 then
+				msg.post(ai_url, constants.PLAYER_SIPHON)
+			end
 			update_power(self, self.siphon_drain_rate * dt)
 		end
 	end
@@ -128,7 +131,10 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash(constants.FIRE_RELEASE) then
 		toggle_power_drain(self, false)
     elseif message_id == hash("ray_cast_response") and message.group == hash(constants.ROBOT) then
-		if self.ai_map[message.id] == nil then
+		local ai_power_url = msg.url(nil, message.id, constants.AI_POWER_SCRIPT)
+		local ai_power = go.get(ai_power_url, "power_level")
+
+		if self.ai_map[message.id] == nil and ai_power > 0.0 then
 			self.ai_map[message.id] = message.id
 		end
 	end

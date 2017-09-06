@@ -56,6 +56,10 @@ function init(self)
 	sprite.set_constant("#sprite", "tint", self.color)
 end
 
+function final(self)
+	msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
+end
+
 function update(self, dt)
 	local screen_pos = camera.world_to_screen(go.get_id("/ortho"), go.get_position())
 	local in_screen_x = screen_pos.x < self.screen_width and screen_pos.x > 0.0 
@@ -71,19 +75,18 @@ function update(self, dt)
 	end
 
 	if active then
-		if self.power_level > self.max_power_level then
-			self.power_level = self.max_power_level
-		end
 		msg.post("/gui#hud", constants.AI_POWER_UPDATE, {id = go.get_id(), power_level = self.power_level})
 		if go.get(self.ai_script_url, "siphoned") ~= true then
 			update_siphon(self, dt)
 		end
+		if self.power_level > self.max_power_level then
+			self.power_level = self.max_power_level
+		end
 	end
 
-	--temporary
+	-- temporary
 	if self.power_level <= 0.0 then
 		go.delete()
-		msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
 	end
 
 	self.was_active = active
