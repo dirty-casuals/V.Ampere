@@ -1,7 +1,7 @@
 local constants = require "constants"
 local camera = require "orthographic.camera"
 
-go.property("minimum_circle_scale", 0.5)
+go.property("minimum_circle_scale", 2.0)
 go.property("siphon_drain_rate", 30.0)
 go.property("power_level", 100.0)
 go.property("max_power_level", 100.0)

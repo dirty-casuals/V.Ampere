@@ -24,7 +24,13 @@ local constants = {
     UNREGISTER_POWER_BAR = "UNREGISTER_POWER_BAR",
     AI_POWER_UPDATE = "AI_POWER_UPDATE",
     REGISTER_NEW_COLOR = "REGISTER_NEW_COLOR",
-    GRANT_NEW_COLOR = "GRANT_NEW_COLOR"
+    GRANT_NEW_COLOR = "GRANT_NEW_COLOR",
+    START_GAME = "start_game",
+    SHOW_MENU = "show_menu",
+    PROXY_LOADED = "proxy_loaded",
+    PROXY_UNLOADED = "proxy_unloaded",
+    CLICK = "click",
+    SPACE = "fire"
 }
 
 return constants

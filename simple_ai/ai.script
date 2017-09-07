@@ -1,7 +1,7 @@
 local constants = require "constants"
 local camera = require "orthographic.camera"
 
-go.property("alerted_scan_distance_tiles",  9)
+go.property("alerted_scan_distance_tiles",  6)
 go.property("scan_distance_tiles",  4)
 go.property("distance_to_give_up", 12.0)
 go.property("speed", 100)
@@ -27,7 +27,6 @@ local function scan(self)
 
 		local new_vect = vmath.vector3(pos.x + new_x, pos.y + new_y, pos.z)
 
-		msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
 		physics.ray_cast(pos, new_vect, self.scan_for, angle_idx)
 		go.set_scale(vmath.vector3(cone_scale, cone_scale, 1.0), "cone")
 	end
@@ -39,93 +38,12 @@ local function move_to_target(self, dt)
 		local current_quat = go.get_rotation()
 		local target_angle = -math.atan2(self.target_pos.x - pos.x, self.target_pos.y - pos.y)
 		local target_quat = vmath.quat_rotation_z(target_angle)
-		local avoid = {left = false, right = false, straight = false}
 
-		local angle_diff = current_quat.z - target_quat.z
-		local avoid_angle = nil
-
-		for idx, obstacle in pairs(self.obstacle_map) do
-			if obstacle then
-				local angle = self.scan_angles[idx]
-				if angle < 0.0 then
-					avoid_angle = -(math.pi / 2) + target_angle
-					avoid.left = true
-				elseif angle > 0.0 then
-					avoid_angle = (math.pi / 2) - target_angle
-					avoid.right = true
-				else
-					avoid_angle = math.pi
-					avoid.straight = true
-				end
-			end
-		end
-
-		-- local avoid_angle = nil
-
-		-- if avoid.right and avoid.left then
-		-- 	-- avoid_angle = angle_diff + math.pi
-		-- 	-- if avoid_angle > math.pi or avoid_angle < -math.pi then
-		-- 	-- 	avoid_angle = -math.pi + (avoid_angle - math.pi)
-		-- 	-- end
-		-- 	avoid_angle = 0
-		-- elseif avoid.right then
-		-- 	if angle_diff < 0.0 then
-		-- 		if angle_diff > -math.pi / 2 then
-		-- 			avoid_angle = -math.pi / 2 --(-math.pi - angle_diff) - (-math.pi / 2)
-		-- 		else
-		-- 			avoid_angle = 0 ---math.pi - angle_diff
-		-- 		end
-		-- 	else
-		-- 		if angle_diff > math.pi / 2 then
-		-- 			avoid_angle = math.pi / 2---((math.pi / 2) - (math.pi - angle_diff))
-		-- 		else
-		-- 			avoid_angle = math.pi---angle_diff
-		-- 		end
-		-- 	end
-		-- elseif avoid.left then
-		-- 	if angle_diff < 0.0 then
-		-- 		if angle_diff > -math.pi / 2 then
-		-- 			avoid_angle = 0---angle_diff
-		-- 		else
-		-- 			avoid_angle = math.pi / 2---((-math.pi / 2) + (-math.pi - angle_diff))
-		-- 		end
-		-- 	else
-		-- 		if angle_diff > math.pi / 2 then
-		-- 			avoid_angle = -math.pi / 2--angle_diff + (math.pi - angle_diff)
-		-- 		else
-		-- 			avoid_angle = -math.pi--angle_diff + ((math.pi / 2) - angle_diff)
-		-- 		end
-		-- 	end
-		-- end
-
-		-- print("diff " .. math.deg(current_quat.z))
-		-- print(math.deg(target_quat.z))
-		-- print(math.deg(avoid_angle) .. " void")
-		-- pprint(avoid_angle)
-		-- print(math.deg(angle_diff))
-
-		-- if avoid_angle ~= nil then
-		-- 	print(math.deg(avoid_angle) .. " void")
-		-- 	target_angle = target_angle + avoid_angle
-		-- end
-		-- target_angle = target_angle + avoid_angle
-
-
-		-- if target_angle < 0.0 then
-		-- 	if target_angle < -math.pi / 2 then
-
-		-- 	else
-
-		-- 	end
-		-- else
-
-		-- end
 		target_quat = vmath.quat_rotation_z(target_angle)
 
 		local q = vmath.slerp(0.08, current_quat, target_quat)
 		go.set_rotation(q)
-		
-		-- move towards target
+
 		local d = vmath.rotate(q, vmath.vector3(0, 1, 0))
 		go.set_position(pos + d * self.speed * dt)
 	end
@@ -210,8 +128,8 @@ function update(self, dt)
 	end
 
 	if self.siphoned ~= true then
-		move_to_target(self, dt)
 		update_target_pos(self)
+		move_to_target(self, dt)
 	end
 
 	update_power_level(self, dt)

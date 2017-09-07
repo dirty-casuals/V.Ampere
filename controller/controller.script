@@ -1,7 +1,11 @@
--- controller.script
+local constants = require "constants"
+
+local GAME_PROXY = "#gameproxy"
+local MENU_PROXY = "#menuproxy"
+
 function init(self)
     msg.post(".", "acquire_input_focus")
-	msg.post("#menuproxy", "load")
+	msg.post(MENU_PROXY, "load")
 end
 
 function final(self)
@@ -9,16 +13,14 @@ function final(self)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("start_game") then
-		msg.post("#gameproxy", "load")
-		msg.post("#menuproxy", "unload")		
-	elseif message_id == hash("show_menu") then
-		msg.post("#menuproxy", "load")
-		msg.post("#gameproxy", "unload")		
-	elseif message_id == hash("proxy_loaded") then
-		print("proxy_loaded", sender)
+	if message_id == hash(constants.START_GAME) then
+		msg.post(GAME_PROXY, "load")
+		msg.post(MENU_PROXY, "unload")		
+	elseif message_id == hash(constants.SHOW_MENU) then
+		msg.post(MENU_PROXY, "load")
+		msg.post(GAME_PROXY, "unload")		
+	elseif message_id == hash(constants.PROXY_LOADED) then
 		msg.post(sender, "enable")
-	elseif message_id == hash("proxy_unloaded") then
-		print("proxy_unloaded", sender)
+	elseif message_id == hash(constants.PROXY_UNLOADED) then
 	end
 end

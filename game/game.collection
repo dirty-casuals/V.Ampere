@@ -61,7 +61,7 @@ collection_instances {
 }
 collection_instances {
   id: "ai"
-  collection: "/ai/simple_ai.collection"
+  collection: "/simple_ai/simple_ai.collection"
   position {
     x: 315.0
     y: 602.498
@@ -92,7 +92,7 @@ collection_instances {
 }
 collection_instances {
   id: "ai1"
-  collection: "/ai/simple_ai.collection"
+  collection: "/simple_ai/simple_ai.collection"
   position {
     x: 841.632
     y: 602.498
