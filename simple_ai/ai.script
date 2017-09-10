@@ -66,7 +66,7 @@ local function update_goal(self)
 			set_goal(self, self.patrol_end_pos)
 		elseif self.goal == self.patrol_end_pos and dist_to_target <= self.distance_to_give_up then
 			set_goal(self, self.start_pos)
-		elseif self.goal ~= self.patrol_end_pos and self.goal ~= self.start_pos then
+		elseif (self.goal ~= self.patrol_end_pos and self.goal ~= self.start_pos) or self.chasing then
 			set_goal(self, self.start_pos)
 		end
 	else
@@ -110,7 +110,7 @@ function init(self)
 	self.siphoned = false
 	self.alert_level = 0.0
 	self.alert_increase_rate = 30.0
-	self.alert_decrease_rate = -20.0
+	self.alert_decrease_rate = -10.0
 	self.alert_rate = self.alert_decrease_rate
 	self.does_patrol =self.patrol_end_pos ~= vmath.vector3(0,0,0)
 	self.goal = go.get_position()
@@ -125,6 +125,7 @@ function init(self)
 	end
 	self.path = {}
 	self.waypoint = nil
+	self.chasing = false
 end
 
 function update(self, dt)
@@ -143,6 +144,7 @@ function update(self, dt)
 	if self.siphoned ~= true then
 		if self.alert_level == 0.0 then
 			update_goal(self)
+			self.chasing = false
 		end
 		update_path(self)
 		move_to_target(self, dt)
@@ -159,6 +161,7 @@ function on_message(self, message_id, message, sender)
     if message_id == hash("ray_cast_response") then
 		if message.group == hash(constants.PLAYER) then
 			self.waypoint =  message.position
+			self.chasing = true
 			self.alert_rate = self.alert_increase_rate
 		end
     elseif message_id == hash(constants.PLAYER_SIPHON) then
@@ -167,7 +170,8 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash(constants.WALL) or message.group == hash(constants.ROBOT) or message.group == hash(constants.PLAYER) then
 			go.set_position(go.get_position() + message.normal * message.distance)
 			if message.group == hash(constants.PLAYER) and not self.siphoned then
-				self.goal = message.position
+				self.waypoint =  message.position
+				self.chasing = true
 				self.alert_rate = self.alert_increase_rate
 			end
 		end

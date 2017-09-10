@@ -54,6 +54,7 @@ function init(self)
 	msg.post("circle", "disable")
 	sprite.set_constant("circle", "tint", self.color)
 	sprite.set_constant("#sprite", "tint", self.color)
+	sprite.set_constant("cone", "tint", self.color)
 end
 
 function final(self)
