@@ -3,7 +3,7 @@ local camera = require "orthographic.camera"
 
 go.property("alerted_scan_distance_tiles",  6)
 go.property("scan_distance_tiles",  4)
-go.property("distance_to_give_up", 12.0)
+go.property("distance_to_give_up", 16.0)
 go.property("speed", 100)
 go.property("siphoned", false)
 go.property("alert_level", 0.0)
@@ -33,13 +33,11 @@ local function scan(self)
 end
 
 local function move_to_target(self, dt)
-	if self.target_pos ~= nil then
+	if self.waypoint ~= nil then
 		local pos = go.get_position()
+		local target_angle = -math.atan2(self.waypoint.x - pos.x, self.waypoint.y - pos.y)
 		local current_quat = go.get_rotation()
-		local target_angle = -math.atan2(self.target_pos.x - pos.x, self.target_pos.y - pos.y)
 		local target_quat = vmath.quat_rotation_z(target_angle)
-
-		target_quat = vmath.quat_rotation_z(target_angle)
 
 		local q = vmath.slerp(0.08, current_quat, target_quat)
 		go.set_rotation(q)
@@ -49,34 +47,34 @@ local function move_to_target(self, dt)
 	end
 end
 
-local function update_target_pos(self)
-	if self.alert_level == 0.0 then
-		self.alerted = false
-		
-		if self.target_pos ~= nil then
-			local dist_to_target = vmath.length(go.get_position() - self.target_pos)
-			if self.does_patrol then
-				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
-					self.target_pos = self.patrol_end_pos
-				elseif self.target_pos == self.patrol_end_pos and dist_to_target <= self.distance_to_give_up then
-					self.target_pos = self.start_pos
-				elseif self.target_pos ~= self.patrol_end_pos then
-					self.target_pos = self.start_pos
-				end
-			else
-				if self.target_pos == self.start_pos and dist_to_target <= self.distance_to_give_up then
-					self.target_pos = nil
-				else
-					self.target_pos = self.start_pos
-				end
-			end
-		end
+local function set_goal(self, new_goal)
+	self.goal = new_goal
+	if new_goal == nil then
+		self.path = {}
+		self.waypoint = nil
+	else
+		self.path = generate_path(go.get_position(), self.goal)
+		table.insert(self.path, 1, self.goal)
+		self.waypoint = table.remove(self.path)
 	end
 end
 
-local function reset_obstacle_map(self)
-	for k, v in pairs(self.obstacle_map) do
-		self.obstacle_map[k] = false
+local function update_goal(self)
+	local dist_to_target = vmath.length(go.get_position() - self.goal)
+	if self.does_patrol then
+		if self.goal == self.start_pos and dist_to_target <= self.distance_to_give_up then
+			set_goal(self, self.patrol_end_pos)
+		elseif self.goal == self.patrol_end_pos and dist_to_target <= self.distance_to_give_up then
+			set_goal(self, self.start_pos)
+		elseif self.goal ~= self.patrol_end_pos and self.goal ~= self.start_pos then
+			set_goal(self, self.start_pos)
+		end
+	else
+		if self.goal == self.start_pos and dist_to_target <= self.distance_to_give_up then
+			set_goal(self, nil)
+		else
+			set_goal(self, self.start_pos)
+		end
 	end
 end
 
@@ -89,29 +87,44 @@ local function update_power_level(self, dt)
 	end
 end
 
+local function update_path(self)
+	if self.path == {} then
+		return
+	end
+
+	-- if self.waypoint == nil then
+	-- 	self.waypoint = table.remove(self.path, 1)
+	-- 	return
+	-- end
+
+	local dist_to_waypoint = vmath.length(go.get_position() - self.waypoint)
+	if dist_to_waypoint <= self.distance_to_give_up then
+		self.waypoint = table.remove(self.path)
+	end
+end
+
 function init(self)
 	self.scan_for = {hash(constants.ROBOT), hash(constants.WALL), hash(constants.PLAYER)}
 	self.start_pos = go.get_position()
+	self.start_angle = go.get_rotation()
 	self.siphoned = false
 	self.alert_level = 0.0
 	self.alert_increase_rate = 30.0
 	self.alert_decrease_rate = -20.0
 	self.alert_rate = self.alert_decrease_rate
 	self.does_patrol =self.patrol_end_pos ~= vmath.vector3(0,0,0)
-	self.target_pos = nil
-	if self.does_patrol then
-		self.target_pos = self.patrol_end_pos
-	end
+	self.goal = go.get_position()
 	self.screen_height = tonumber(sys.get_config("display.height"))
 	self.screen_width = tonumber(sys.get_config("display.width"))
 	self.normal_projection_length = constants.TILE_SIZE * self.scan_distance_tiles
 	self.was_active = false
-	self.obstacle_map = {}
+	self.path = {}
 	self.scan_angles = {}
 	for angle = -math.pi / 6, (math.pi / 6) + 0.01, 0.174533 do
-		self.obstacle_map[#self.obstacle_map + 1] = false
 		self.scan_angles[#self.scan_angles + 1] = angle
 	end
+	self.path = {}
+	self.waypoint = nil
 end
 
 function update(self, dt)
@@ -128,7 +141,10 @@ function update(self, dt)
 	end
 
 	if self.siphoned ~= true then
-		update_target_pos(self)
+		if self.alert_level == 0.0 then
+			update_goal(self)
+		end
+		update_path(self)
 		move_to_target(self, dt)
 	end
 
@@ -137,18 +153,13 @@ function update(self, dt)
 	self.alert_rate = self.alert_decrease_rate
 	self.siphoned = false
 	self.was_active = active
-	reset_obstacle_map(self)
 end
 
 function on_message(self, message_id, message, sender)
     if message_id == hash("ray_cast_response") then
 		if message.group == hash(constants.PLAYER) then
-			self.target_pos = message.position
+			self.waypoint =  message.position
 			self.alert_rate = self.alert_increase_rate
-		elseif message.group == hash(constants.WALL) then
-			if vmath.length(go.get_position() - message.position) <= constants.TILE_SIZE * 2 then
-				self.obstacle_map[message.request_id] = true
-			end
 		end
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
@@ -156,7 +167,7 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash(constants.WALL) or message.group == hash(constants.ROBOT) or message.group == hash(constants.PLAYER) then
 			go.set_position(go.get_position() + message.normal * message.distance)
 			if message.group == hash(constants.PLAYER) and not self.siphoned then
-				self.target_pos = message.position
+				self.goal = message.position
 				self.alert_rate = self.alert_increase_rate
 			end
 		end

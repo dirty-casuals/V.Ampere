@@ -43,7 +43,7 @@ collection_instances {
   id: "player"
   collection: "/player/player.collection"
   position {
-    x: 355.851
+    x: 222.822
     y: 244.648
     z: 0.0
   }
@@ -63,7 +63,7 @@ collection_instances {
   id: "ai"
   collection: "/simple_ai/simple_ai.collection"
   position {
-    x: 315.0
+    x: 207.719
     y: 602.498
     z: 0.0
   }
@@ -83,26 +83,6 @@ collection_instances {
         type: PROPERTY_TYPE_VECTOR3
       }
     }
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-collection_instances {
-  id: "ai1"
-  collection: "/simple_ai/simple_ai.collection"
-  position {
-    x: 841.632
-    y: 602.498
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
   }
   scale3 {
     x: 1.0
