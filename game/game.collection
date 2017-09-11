@@ -147,3 +147,78 @@ embedded_instances {
     z: 1.0
   }
 }
+embedded_instances {
+  id: "music"
+  data: "components {\n"
+  "  id: \"sound_manager\"\n"
+  "  component: \"/sounds/sound_manager.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"music\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/sounds/DST-SteelCandle.ogg\\\"\\n"
+  "looping: 1\\n"
+  "group: \\\"music\\\"\\n"
+  "gain: 0.5\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"robot_death\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/sounds/55836__sergenious__laser2.wav\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"sounds\\\"\\n"
+  "gain: 1.0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}

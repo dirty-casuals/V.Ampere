@@ -30,7 +30,12 @@ local constants = {
     PROXY_LOADED = "proxy_loaded",
     PROXY_UNLOADED = "proxy_unloaded",
     CLICK = "click",
-    SPACE = "fire"
+    SPACE = "fire",
+    SIPHON_SOUND = "siphon",
+    PLAY_BACKGROUND_MUSIC1 = "PLAY_BACKGROUND_MUSIC1",
+    ROBOT_DEATH = "ROBOT_DEATH",
+    SOUND_MANAGER = "/music#sound_manager",
+    PLAY_SOUND = "PLAY_SOUND"
 }
 
 return constants

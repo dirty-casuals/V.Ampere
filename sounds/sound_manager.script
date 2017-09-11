@@ -1,0 +1,25 @@
+local constants = require "constants"
+
+local function play_sound(self, sound, play)
+	msg.post(sound, play)
+end
+
+function init(self)
+	self.sound_to_url = {}
+	self.sound_to_url[hash(constants.PLAY_BACKGROUND_MUSIC1)] = "#music"
+	self.sound_to_url[hash(constants.ROBOT_DEATH)] = "#robot_death"
+	
+	self.bool_to_msg = {}
+	self.bool_to_msg[true] = "play_sound"
+	self.bool_to_msg[false] = "stop_sound"
+	
+	play_sound(self, "#music", self.bool_to_msg[true])
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash(constants.PLAY_SOUND) then
+		play_sound(self, message.sound, self.bool_to_msg[message.play])
+	else
+		play_sound(self, self.sound_to_url[message_id],  self.bool_to_msg[message.play])
+	end
+end

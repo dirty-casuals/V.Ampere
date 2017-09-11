@@ -58,6 +58,7 @@ local function toggle_power_drain(self, enable)
 		self.movement_drain = self.movement_drain - self.extra_siphon_drain
 		self.ai_map = {}
 	end
+	msg.post(constants.SOUND_MANAGER, constants.PLAY_SOUND, {sound = msg.url(nil, go.get_id("sounds"), constants.SIPHON_SOUND), play = enable})
 end
 
 local function siphon(self, dt)
