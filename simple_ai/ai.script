@@ -88,14 +88,9 @@ local function update_power_level(self, dt)
 end
 
 local function update_path(self)
-	if self.path == {} then
+	if next(self.path) == nil then
 		return
 	end
-
-	-- if self.waypoint == nil then
-	-- 	self.waypoint = table.remove(self.path, 1)
-	-- 	return
-	-- end
 
 	local dist_to_waypoint = vmath.length(go.get_position() - self.waypoint)
 	if dist_to_waypoint <= self.distance_to_give_up then
@@ -161,6 +156,7 @@ function on_message(self, message_id, message, sender)
     if message_id == hash("ray_cast_response") then
 		if message.group == hash(constants.PLAYER) then
 			self.waypoint =  message.position
+			self.path = {}
 			self.chasing = true
 			self.alert_rate = self.alert_increase_rate
 		end
@@ -171,6 +167,7 @@ function on_message(self, message_id, message, sender)
 			go.set_position(go.get_position() + message.normal * message.distance)
 			if message.group == hash(constants.PLAYER) and not self.siphoned then
 				self.waypoint =  message.position
+				self.path = {}
 				self.chasing = true
 				self.alert_rate = self.alert_increase_rate
 			end
