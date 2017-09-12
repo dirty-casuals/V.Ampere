@@ -103,8 +103,14 @@ function update(self, dt)
 	if in_screen ~= self.was_in_screen then
 		if in_screen then
 			msg.post("/gui#hud", constants.REGISTER_POWER_BAR, {id = go.get_id(), color = self.color})
+			if self.sound_playing == true then
+				send_sound_message(self, constants.SIPHON_SOUND, true)
+			end
 		else
 			msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
+			if self.sound_playing == true then
+				send_sound_message(self, constants.SIPHON_SOUND, false)
+			end
 		end
 	end
 
