@@ -39,7 +39,7 @@ collection_instances {
       id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "315.0,1400.0,0.0"
+        value: "575.0,1400.0,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -56,7 +56,7 @@ collection_instances {
   position {
     x: 0.0
     y: 0.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0

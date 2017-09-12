@@ -1,3 +1,5 @@
+local constants = require "constants"
+
 local astar = require("astar/astar")
 local TILE_SIZE = 64
 local ZORDER_PATH = 0.5
@@ -75,7 +77,7 @@ function generate_path(start, goal)
 end
 
 function init(self)
-    levelx, levely, width, height = tilemap.get_bounds("/level1/level#level1")
+    levelx, levely, width, height = tilemap.get_bounds(constants.LEVEL_1_TILEMAP)
     level_size = vmath.vector3(width, height, 0)
 
 	-- Create cost of each tile, tiles with walls on are very high cost
@@ -84,7 +86,7 @@ function init(self)
 	    for lx = 0, width - 1 do
 			local tile_idx_x = lx + 1
 			local tile_idx_y = ly + 1
-	        local tile_wall = tilemap.get_tile("/level1/level#level1", hash("walls"), tile_idx_x, tile_idx_y)
+	        local tile_wall = tilemap.get_tile(constants.LEVEL_1_TILEMAP, hash("walls"), tile_idx_x, tile_idx_y)
 			local tile = 1
 			if tile_wall > 0 then
 				tile = tile_wall_cost
