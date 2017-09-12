@@ -1,9 +1,11 @@
 local constants = require "constants"
-local camera = require "orthographic.camera"
+local camera = require("camera.camera")
 
 go.property("alerted_scan_distance_tiles",  6)
 go.property("scan_distance_tiles",  4)
 go.property("distance_to_give_up", 16.0)
+go.property("alert_increase_rate", 30.0)
+go.property("alert_decrease_rate", -20.0)
 go.property("speed", 100)
 go.property("siphoned", false)
 go.property("alert_level", 0.0)
@@ -106,15 +108,12 @@ function init(self)
 	self.start_angle = go.get_rotation()
 	self.siphoned = false
 	self.alert_level = 0.0
-	self.alert_increase_rate = 30.0
-	self.alert_decrease_rate = -10.0
 	self.alert_rate = self.alert_decrease_rate
 	self.does_patrol =self.patrol_end_pos ~= vmath.vector3(0,0,0)
 	self.goal = go.get_position()
 	self.screen_height = tonumber(sys.get_config("display.height"))
 	self.screen_width = tonumber(sys.get_config("display.width"))
 	self.normal_projection_length = constants.TILE_SIZE * self.scan_distance_tiles
-	self.was_active = false
 	self.path = {}
 	self.scan_angles = {}
 	for angle = -math.pi / 6, (math.pi / 6) + 0.01, 0.174533 do
@@ -130,10 +129,8 @@ function update(self, dt)
 		return
 	end
 
-	local screen_pos = camera.world_to_screen(go.get_id("/ortho"), go.get_position())
-	local near_screen_x = screen_pos.x < self.screen_width + self.normal_projection_length and screen_pos.x > 0.0 
-	local near_screen_y = screen_pos.y < self.screen_height + self.normal_projection_length and screen_pos.y > 0.0 
-	local active = (near_screen_x and near_screen_y) or self.alert_level > 0.0
+	local near_screen = camera.is_go_near_screen(go.get_id("/ortho"), go.get_position(), self.screen_width, self.screen_height, self.normal_projection_length)
+	local active = near_screen or self.alert_level > 0.0
 
 	if self.siphoned == true then
 		msg.post("cone", "disable")
@@ -155,7 +152,6 @@ function update(self, dt)
 
 	self.alert_rate = self.alert_decrease_rate
 	self.siphoned = false
-	self.was_active = active
 end
 
 function on_message(self, message_id, message, sender)

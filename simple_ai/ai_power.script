@@ -1,5 +1,5 @@
 local constants = require "constants"
-local camera = require "orthographic.camera"
+local camera = require("camera.camera")
 
 go.property("minimum_circle_scale", 2.0)
 go.property("siphon_drain_rate", 30.0)
@@ -10,6 +10,18 @@ go.property("min_siphon_size", 1.0)
 
 local function send_sound_message(self, sound, play)
 	msg.post(constants.SOUND_MANAGER, constants.PLAY_SOUND, {sound = msg.url(nil, go.get_id("sounds"), sound), play = play})
+end
+
+local function is_siphon_enabled(self, alert_level, siphoned)
+	return alert_level > 0.0 and siphoned ~= true
+end
+
+local function get_alert_level(self)
+	return go.get(self.ai_script_url, "alert_level")
+end
+
+local function get_siphoned(self)
+	return go.get(self.ai_script_url, "siphoned")
 end
 
 local function set_siphon_size(self)
@@ -38,7 +50,7 @@ end
 
 local function update_siphon(self, dt)
 	local was_siphon_enabled = self.siphon_enabled
-	self.siphon_enabled = (go.get(self.ai_script_url, "alert_level") > 0.0) and go.get(self.ai_script_url, "siphoned") ~= true
+	self.siphon_enabled = is_siphon_enabled(self, get_alert_level(self), get_siphoned(self))
 	if self.siphon_enabled then
 		set_siphon_size(self)
 		siphon_from_player(self, dt)
@@ -46,11 +58,13 @@ local function update_siphon(self, dt)
 		if was_siphon_enabled ~= self.siphon_enabled then
 			msg.post("circle", "enable")
 			send_sound_message(self, constants.SIPHON_SOUND, true)
+			self.sound_playing = true
 		end
 	else
 		if was_siphon_enabled ~= self.siphon_enabled then
 			msg.post("circle", "disable")
 			send_sound_message(self, constants.SIPHON_SOUND, false)
+			self.sound_playing = false
 		end
 	end
 end
@@ -69,12 +83,13 @@ function init(self)
 	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
 	self.screen_height = tonumber(sys.get_config("display.height"))
 	self.screen_width = tonumber(sys.get_config("display.width"))
-	self.was_active = false
-	self.color = vmath.vector4(math.random(), math.random(), math.random(), 1)
+	self.was_in_screen = false
+	self.color = vmath.vector4(math.random(), math.random(), math.random(), 0.5)
 	self.siphon_enabled = false
+	self.sound_playing = false
 	msg.post("circle", "disable")
 	sprite.set_constant("circle", "tint", self.color)
-	sprite.set_constant("#sprite", "tint", self.color)
+	sprite.set_constant("#sprite", "tint", vmath.vector4(self.color.x, self.color.y, self.color.z, 1.0))
 	sprite.set_constant("cone", "tint", self.color)
 end
 
@@ -83,22 +98,19 @@ function update(self, dt)
 		return
 	end
 
-	local screen_pos = camera.world_to_screen(go.get_id("/ortho"), go.get_position())
-	local in_screen_x = screen_pos.x < self.screen_width and screen_pos.x > 0.0 
-	local in_screen_y = screen_pos.y < self.screen_height and screen_pos.y > 0.0 
-	local active = in_screen_x and in_screen_y
+	local in_screen = camera.is_go_on_screen(go.get_id("/ortho"), go.get_position(), self.screen_width, self.screen_height)
 
-	if active ~= self.was_active then
-		if active then
+	if in_screen ~= self.was_in_screen then
+		if in_screen then
 			msg.post("/gui#hud", constants.REGISTER_POWER_BAR, {id = go.get_id(), color = self.color})
 		else
 			msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
 		end
 	end
 
-	if active then
+	if in_screen then
 		msg.post("/gui#hud", constants.AI_POWER_UPDATE, {id = go.get_id(), power_level = self.power_level})
-		if go.get(self.ai_script_url, "siphoned") ~= true then
+		if get_siphoned(self) ~= true then
 			update_siphon(self, dt)
 		end
 		if self.power_level > self.max_power_level then
@@ -106,7 +118,7 @@ function update(self, dt)
 		end
 	end
 
-	self.was_active = active
+	self.was_in_screen = in_screen
 
 	if self.power_level <= 0.0 then
 		dead = true
