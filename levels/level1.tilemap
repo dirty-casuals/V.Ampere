@@ -4904,13 +4904,6 @@ layers {
     v_flip: 0
   }
   cell {
-    x: 21
-    y: 22
-    tile: 41
-    h_flip: 0
-    v_flip: 0
-  }
-  cell {
     x: 37
     y: 16
     tile: 99
@@ -14721,13 +14714,6 @@ layers {
     x: 44
     y: 4
     tile: 99
-    h_flip: 0
-    v_flip: 0
-  }
-  cell {
-    x: 21
-    y: 21
-    tile: 41
     h_flip: 0
     v_flip: 0
   }

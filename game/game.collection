@@ -20,8 +20,39 @@ instances {
   }
 }
 collection_instances {
-  id: "level1"
-  collection: "/levels/level1.collection"
+  id: "ai"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 576.891
+    y: 602.498
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "315.0,1400.0,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "firstlevel"
+  collection: "/levels/firstlevel.collection"
   position {
     x: 0.0
     y: 0.0
@@ -43,8 +74,8 @@ collection_instances {
   id: "player"
   collection: "/player/player.collection"
   position {
-    x: 222.822
-    y: 244.648
+    x: 571.342
+    y: 187.68
     z: 0.0
   }
   rotation {
@@ -52,37 +83,6 @@ collection_instances {
     y: 0.0
     z: 0.0
     w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-collection_instances {
-  id: "ai"
-  collection: "/simple_ai/simple_ai.collection"
-  position {
-    x: 207.719
-    y: 602.498
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  instance_properties {
-    id: "ai"
-    properties {
-      id: "ai"
-      properties {
-        id: "patrol_end_pos"
-        value: "315.0,1400.0,0.0"
-        type: PROPERTY_TYPE_VECTOR3
-      }
-    }
   }
   scale3 {
     x: 1.0
