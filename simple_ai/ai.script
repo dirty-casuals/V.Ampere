@@ -11,6 +11,8 @@ go.property("siphoned", false)
 go.property("alert_level", 0.0)
 go.property("patrol_end_pos", vmath.vector3(0,0,0))
 
+local MAX_ALERT_LEVEL = 100.0
+
 dead = false
 
 local function scan(self)
@@ -86,8 +88,8 @@ local function update_power_level(self, dt)
 	self.alert_level = self.alert_level + (self.alert_rate * dt)
 	if self.alert_level < 0.0 then
 		self.alert_level = 0.0
-	elseif self.alert_level > 100.0 then
-		self.alert_level = 100.0
+	elseif self.alert_level > MAX_ALERT_LEVEL then
+		self.alert_level = MAX_ALERT_LEVEL
 	end
 end
 

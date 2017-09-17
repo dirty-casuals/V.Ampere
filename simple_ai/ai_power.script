@@ -12,7 +12,7 @@ local function send_sound_message(self, sound, play)
 	msg.post(constants.SOUND_MANAGER, constants.PLAY_SOUND, {sound = msg.url(nil, go.get_id("sounds"), sound), play = play})
 end
 
-local function is_siphon_enabled(self, alert_level, siphoned)
+local function is_siphon_enabled(alert_level, siphoned)
 	return alert_level > 0.0 and siphoned ~= true
 end
 
@@ -24,11 +24,12 @@ local function get_siphoned(self)
 	return go.get(self.ai_script_url, "siphoned")
 end
 
-local function set_siphon_size(self)
-	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
+local function get_siphon_size(power_level, min_scale, max_scale)
+	local gui_level = power_level / 100
+	local scale = gui_level * max_scale.x
 	local scale_vect = vmath.vector3(scale, scale, scale)
-	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
-	go.set_scale(lerped_vect, "circle")
+
+	return vmath.lerp(gui_level, min_scale, max_scale)
 end
 
 local function siphon_from_player(self, dt)
@@ -50,9 +51,10 @@ end
 
 local function update_siphon(self, dt)
 	local was_siphon_enabled = self.siphon_enabled
-	self.siphon_enabled = is_siphon_enabled(self, get_alert_level(self), get_siphoned(self))
+	self.siphon_enabled = is_siphon_enabled(get_alert_level(self), get_siphoned(self))
 	if self.siphon_enabled then
-		set_siphon_size(self)
+		local new_siphon_size = get_siphon_size(self.power_level, self.min_scale_circle_vect, self.power_circle_start_scale)
+		go.set_scale(new_siphon_size, "circle")
 		siphon_from_player(self, dt)
 
 		if was_siphon_enabled ~= self.siphon_enabled then
