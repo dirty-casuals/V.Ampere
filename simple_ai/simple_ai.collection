@@ -222,7 +222,7 @@ embedded_instances {
   "  type: \"sound\"\n"
   "  data: \"sound: \\\"/sounds/55829__sergenious__electric.wav\\\"\\n"
   "looping: 1\\n"
-  "group: \\\"sounds\\\"\\n"
+  "group: \\\"master,sounds\\\"\\n"
   "gain: 0.3\\n"
   "\"\n"
   "  position {\n"
