@@ -1,5 +1,5 @@
 animations {
-  id: "man"
+  id: "robot"
   images {
     image: "/images/robot.png"
   }
@@ -22,6 +22,26 @@ animations {
   id: "cone"
   images {
     image: "/images/cone.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "evil_robot"
+  images {
+    image: "/images/EvilRobot.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "robot2"
+  images {
+    image: "/images/robot2.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60

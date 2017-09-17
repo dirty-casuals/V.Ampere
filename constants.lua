@@ -36,7 +36,7 @@ local constants = {
     ROBOT_DEATH = "ROBOT_DEATH",
     SOUND_MANAGER = "/music#sound_manager",
     PLAY_SOUND = "PLAY_SOUND",
-    LEVEL_1_TILEMAP = "/firstlevel/level#firstlevel"
+    LEVEL_1_TILEMAP = "/level/level#level"
 }
 
 return constants

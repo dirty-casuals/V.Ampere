@@ -3,7 +3,7 @@ scale_along_z: 0
 embedded_instances {
   id: "level"
   data: "components {\n"
-  "  id: \"firstlevel\"\n"
+  "  id: \"level\"\n"
   "  component: \"/levels/firstlevel.tilemap\"\n"
   "  position {\n"
   "    x: 0.0\n"

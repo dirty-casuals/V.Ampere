@@ -51,7 +51,7 @@ collection_instances {
   }
 }
 collection_instances {
-  id: "firstlevel"
+  id: "level"
   collection: "/levels/firstlevel.collection"
   position {
     x: 0.0
