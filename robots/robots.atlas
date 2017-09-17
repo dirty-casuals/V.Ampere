@@ -31,7 +31,7 @@ animations {
 animations {
   id: "evil_robot"
   images {
-    image: "/images/EvilRobot.png"
+    image: "/images/evil_robot.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60

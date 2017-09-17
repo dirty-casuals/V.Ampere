@@ -1,26 +1,41 @@
 local constants = require "constants"
 
+go.property("muted", false)
+
 local GAME_PROXY = "#gameproxy"
 local MENU_PROXY = "#menuproxy"
 
-function init(self)
-    msg.post(".", "acquire_input_focus")
-	msg.post(MENU_PROXY, "load")
+local function pause(self, paused)
+	factor = paused and 0 or 1
+	msg.post(self.loaded_proxy, "set_time_step", {factor = factor, mode = 1})
 end
 
-function final(self)
-	msg.post(".", "release_input_focus")
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.loaded_proxy = GAME_PROXY
+	msg.post(self.loaded_proxy, "load")
+	pause(self, true)
 end
 
 function on_message(self, message_id, message, sender)
+	pprint(message_id)
 	if message_id == hash(constants.START_GAME) then
-		msg.post(GAME_PROXY, "load")
-		msg.post(MENU_PROXY, "unload")		
-	elseif message_id == hash(constants.SHOW_MENU) then
-		msg.post(MENU_PROXY, "load")
-		msg.post(GAME_PROXY, "unload")		
+		pause(self, false)
+	elseif message_id == hash(constants.PAUSE_GAME) then
+		pause(self, true)
+	elseif message_id == hash(constants.UNPAUSE_GAME) then
+		pause(self, false)
+	elseif message_id == hash(constants.RESTART_LEVEL) then
+		msg.post(self.loaded_proxy, "unload")
+	elseif message_id == hash(constants.MUTE) then
+		self.muted = true
+		sound.set_group_gain("master", 0.0)
+	elseif message_id == hash(constants.UNMUTE) then
+		self.muted = false
+		sound.set_group_gain("master", 1.0)
 	elseif message_id == hash(constants.PROXY_LOADED) then
 		msg.post(sender, "enable")
 	elseif message_id == hash(constants.PROXY_UNLOADED) then
+		msg.post(self.loaded_proxy, "load")
 	end
 end

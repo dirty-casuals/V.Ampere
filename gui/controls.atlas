@@ -1,0 +1,27 @@
+images {
+  image: "/images/cross.png"
+}
+images {
+  image: "/images/pause_big.png"
+}
+images {
+  image: "/images/pause_small.png"
+}
+images {
+  image: "/images/play.png"
+}
+images {
+  image: "/images/replay.png"
+}
+images {
+  image: "/images/sound_off.png"
+}
+images {
+  image: "/images/sound_on.png"
+}
+images {
+  image: "/images/tick.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

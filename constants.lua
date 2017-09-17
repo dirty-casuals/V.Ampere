@@ -36,7 +36,13 @@ local constants = {
     ROBOT_DEATH = "ROBOT_DEATH",
     SOUND_MANAGER = "/music#sound_manager",
     PLAY_SOUND = "PLAY_SOUND",
-    LEVEL_1_TILEMAP = "/level/level#level"
+    LEVEL_1_TILEMAP = "/level/level#level",
+    PAUSE_GAME = "PAUSE_GAME",
+    UNPAUSE_GAME = "UNPAUSE_GAME",
+    CONTROLLER = "controller:/controller",
+    RESTART_LEVEL = "RESTART_LEVEL",
+    MUTE = "MUTE",
+    UNMUTE = "UNMUTE"
 }
 
 return constants
