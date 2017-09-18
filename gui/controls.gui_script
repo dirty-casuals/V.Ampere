@@ -27,6 +27,7 @@ function init(self)
 	self.restart = gui.get_node(RESTART)
 	self.no = gui.get_node(NO)
 	self.yes = gui.get_node(YES)
+	self.started = false
 
 	toggle({self.enable_sound, self.pause, self.yes, self.no, self.paused}, false)
 	toggle({self.start, self.disable_sound, self.play}, true)
@@ -46,7 +47,12 @@ function on_input(self, action_id, action)
 	local no_clicked = action_id == hash(constants.CLICK) and gui.pick_node(gui.get_node(NO), action.x, action.y) and action.pressed and gui.is_enabled(self.no)
 	local yes_clicked = action_id == hash(constants.CLICK) and gui.pick_node(gui.get_node(YES), action.x, action.y) and action.pressed and gui.is_enabled(self.yes)
 
-	if start_clicked then
+	local mute_pressed = action_id == hash(constants.MUTE_BUTTON) and action.released
+	local start_pressed = action_id == hash(constants.FIRE_BUTTON) and action.released
+
+	-- State machine this?
+	if (start_clicked or start_pressed) and self.started ~= true then
+		self.started = true
 		toggle({self.start, self.play}, false)
 		toggle({self.pause}, true)
 		msg.post(constants.CONTROLLER, constants.START_GAME)
@@ -54,21 +60,21 @@ function on_input(self, action_id, action)
 		toggle({self.paused, self.play}, true)
 		toggle({self.pause}, false)
 		msg.post(constants.CONTROLLER, constants.PAUSE_GAME)
-	elseif play_clicked then
+	elseif play_clicked and self.started then
 		toggle({self.pause}, true)
 		toggle({self.paused, self.play}, false)
 		msg.post(constants.CONTROLLER, constants.UNPAUSE_GAME)
-	elseif mute_clicked then
+	elseif mute_clicked or (self.muted ~= true and mute_pressed) then
 		self.muted = true
 		msg.post(constants.CONTROLLER, constants.MUTE)
 		toggle({self.enable_sound}, true)
 		toggle({self.disable_sound}, false)
-	elseif enable_sound_clicked then
+	elseif enable_sound_clicked or (self.muted == true and mute_pressed) then
 		self.muted = false
 		msg.post(constants.CONTROLLER, constants.UNMUTE)
 		toggle({self.disable_sound}, true)
 		toggle({self.enable_sound}, false)
-	elseif restart_clicked then
+	elseif restart_clicked and self.started then
 		msg.post(constants.CONTROLLER, constants.PAUSE_GAME)
 		toggle({self.pause}, true)
 		toggle({self.yes, self.no}, true)

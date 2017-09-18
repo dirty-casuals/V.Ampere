@@ -48,7 +48,7 @@ function on_input(self, action_id, action)
 		self.move = action.released and 0 or -1
 	end
 	
-	if action_id == hash("fire") then
+	if action_id == hash(constants.FIRE_BUTTON) then
 		if action.pressed then
 			for idx, listener in pairs(self.fire_listeners) do
 				msg.post(listener, constants.FIRE_PRESS)

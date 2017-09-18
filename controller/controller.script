@@ -1,9 +1,9 @@
 local constants = require "constants"
 
 go.property("muted", false)
+go.property("started", false)
 
 local GAME_PROXY = "#gameproxy"
-local MENU_PROXY = "#menuproxy"
 
 local function pause(self, paused)
 	factor = paused and 0 or 1
@@ -19,6 +19,7 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash(constants.START_GAME) then
+		self.started = true
 		pause(self, false)
 	elseif message_id == hash(constants.PAUSE_GAME) then
 		pause(self, true)

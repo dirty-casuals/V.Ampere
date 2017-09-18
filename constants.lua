@@ -42,7 +42,9 @@ local constants = {
     CONTROLLER = "controller:/controller",
     RESTART_LEVEL = "RESTART_LEVEL",
     MUTE = "MUTE",
-    UNMUTE = "UNMUTE"
+    UNMUTE = "UNMUTE",
+    MUTE_BUTTON = "mute",
+    FIRE_BUTTON = "fire"
 }
 
 return constants
