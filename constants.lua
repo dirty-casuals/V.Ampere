@@ -41,10 +41,13 @@ local constants = {
     UNPAUSE_GAME = "UNPAUSE_GAME",
     CONTROLLER = "controller:/controller",
     RESTART_LEVEL = "RESTART_LEVEL",
+    RESTART_GAME = "RESTART_GAME",
+    END_GAME = "END_GAME",
     MUTE = "MUTE",
     UNMUTE = "UNMUTE",
     MUTE_BUTTON = "mute",
-    FIRE_BUTTON = "fire"
+    FIRE_BUTTON = "fire",
+    DIE = "die"
 }
 
 return constants

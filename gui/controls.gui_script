@@ -8,6 +8,8 @@ local ENABLE_SOUND = "enable_sound"
 local RESTART = "restart"
 local NO = "no"
 local YES = "yes"
+local RESTART_GAME = "restart_game"
+local GAME_OVER = "game_over"
 
 local function toggle(nodes, enable)
 	for idx, node in pairs(nodes) do
@@ -27,9 +29,11 @@ function init(self)
 	self.restart = gui.get_node(RESTART)
 	self.no = gui.get_node(NO)
 	self.yes = gui.get_node(YES)
+	self.restart_game = gui.get_node(RESTART_GAME)
+	self.game_over = gui.get_node(GAME_OVER)
 	self.started = false
 
-	toggle({self.enable_sound, self.pause, self.yes, self.no, self.paused}, false)
+	toggle({self.enable_sound, self.pause, self.yes, self.no, self.paused, self.game_over, self.restart_game}, false)
 	toggle({self.start, self.disable_sound, self.play}, true)
 end
 
@@ -46,6 +50,7 @@ function on_input(self, action_id, action)
 	local restart_clicked = action_id == hash(constants.CLICK) and gui.pick_node(gui.get_node(RESTART), action.x, action.y) and action.pressed and gui.is_enabled(self.restart)
 	local no_clicked = action_id == hash(constants.CLICK) and gui.pick_node(gui.get_node(NO), action.x, action.y) and action.pressed and gui.is_enabled(self.no)
 	local yes_clicked = action_id == hash(constants.CLICK) and gui.pick_node(gui.get_node(YES), action.x, action.y) and action.pressed and gui.is_enabled(self.yes)
+	local restart_game_clicked = action_id == hash(constants.CLICK) and gui.pick_node(gui.get_node(RESTART_GAME), action.x, action.y) and action.pressed and gui.is_enabled(self.restart_game)
 
 	local mute_pressed = action_id == hash(constants.MUTE_BUTTON) and action.released
 	local start_pressed = action_id == hash(constants.FIRE_BUTTON) and action.released
@@ -56,6 +61,7 @@ function on_input(self, action_id, action)
 		toggle({self.start, self.play}, false)
 		toggle({self.pause}, true)
 		msg.post(constants.CONTROLLER, constants.START_GAME)
+		msg.post("/player/player", constants.START_GAME)
 	elseif pause_clicked then
 		toggle({self.paused, self.play}, true)
 		toggle({self.pause}, false)
@@ -87,5 +93,15 @@ function on_input(self, action_id, action)
 		toggle({self.disable_sound}, not self.muted)
 	elseif yes_clicked then
 		msg.post(constants.CONTROLLER, constants.RESTART_LEVEL)
+	elseif restart_game_clicked then
+		msg.post(constants.CONTROLLER, constants.RESTART_GAME)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash(constants.DIE) then
+		toggle({self.yes, self.no, self.enable_sound, self.pause, self.paused, self.disable_sound, self.play, self.restart}, false)
+		toggle({self.restart_game, self.game_over}, true)
+		msg.post(constants.CONTROLLER, constants.END_GAME)
 	end
 end

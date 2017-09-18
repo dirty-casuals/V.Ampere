@@ -3,9 +3,9 @@ local camera = require "orthographic.camera"
 
 go.property("angular_velocity", 5)
 go.property("linear_velocity", 200)
+go.property("dead", false)
 
 function init(self)
-	msg.post(".", "acquire_input_focus")
 	camera.follow(go.get_id("/ortho"), go.get_id())
 	
 	self.move = 0
@@ -18,6 +18,10 @@ function final(self)
 end
 
 function update(self, dt)
+	if self.dead then
+		return
+	end
+
 	local rotation = go.get_rotation()
 	-- handle rotation from key input left/right
 	if self.rotate ~= 0 then
@@ -66,5 +70,10 @@ function on_message(self, message_id, message, sender)
 		self.fire_listeners[#self.fire_listeners + 1] = sender
 	elseif message_id == hash("contact_point_response") and message.group == hash(constants.WALL) then
 		go.set_position(go.get_position() + message.normal * message.distance)
+	elseif message_id == hash(constants.DIE) then
+		msg.post(".", "release_input_focus")
+		self.dead = true
+	elseif message_id == hash(constants.START_GAME) then
+		msg.post(".", "acquire_input_focus")
 	end
 end

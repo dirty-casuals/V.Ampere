@@ -74,6 +74,7 @@ local function die(self)
 	msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
 	msg.post("circle", "disable")
 	msg.post("cone", "disable")
+	send_sound_message(self, constants.SIPHON_SOUND, false)
 	sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
 end
 
