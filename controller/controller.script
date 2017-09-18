@@ -18,7 +18,6 @@ function init(self)
 end
 
 function on_message(self, message_id, message, sender)
-	pprint(message_id)
 	if message_id == hash(constants.START_GAME) then
 		pause(self, false)
 	elseif message_id == hash(constants.PAUSE_GAME) then

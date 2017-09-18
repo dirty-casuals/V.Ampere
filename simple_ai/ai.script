@@ -78,6 +78,7 @@ local function update_goal(self)
 	else
 		if self.goal == self.start_pos and dist_to_target <= self.distance_to_give_up then
 			set_goal(self, nil)
+			go.set_rotation(self.start_angle)
 		else
 			set_goal(self, self.start_pos)
 		end
@@ -142,7 +143,7 @@ function update(self, dt)
 	end
 
 	if self.siphoned ~= true then
-		if self.alert_level == 0.0 then
+		if self.alert_level == 0.0 and self.goal ~= nil then
 			update_goal(self)
 			self.chasing = false
 		end
@@ -160,6 +161,7 @@ function on_message(self, message_id, message, sender)
     if message_id == hash("ray_cast_response") then
 		if message.group == hash(constants.PLAYER) then
 			self.waypoint =  message.position
+			self.goal = self.waypoint
 			self.path = {}
 			self.chasing = true
 			self.alert_rate = self.alert_increase_rate
@@ -172,6 +174,7 @@ function on_message(self, message_id, message, sender)
 			if message.group == hash(constants.PLAYER) and not self.siphoned then
 				self.waypoint =  message.position
 				self.path = {}
+				self.goal = self.waypoint
 				self.chasing = true
 				self.alert_rate = self.alert_increase_rate
 			end

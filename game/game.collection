@@ -90,6 +90,50 @@ collection_instances {
     z: 1.0
   }
 }
+collection_instances {
+  id: "worker1"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 699.294
+    y: 1503.328
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "gui"

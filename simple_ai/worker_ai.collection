@@ -1,12 +1,13 @@
 name: "default"
 scale_along_z: 0
 embedded_instances {
-  id: "player"
+  id: "ai"
   children: "circle"
+  children: "cone"
   children: "sounds"
   data: "components {\n"
-  "  id: \"player_control\"\n"
-  "  component: \"/player/player_control.script\"\n"
+  "  id: \"ai\"\n"
+  "  component: \"/simple_ai/ai.script\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
@@ -20,8 +21,8 @@ embedded_instances {
   "  }\n"
   "}\n"
   "components {\n"
-  "  id: \"player_power\"\n"
-  "  component: \"/player/player_power.script\"\n"
+  "  id: \"ai_power\"\n"
+  "  component: \"/simple_ai/ai_power.script\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
@@ -33,15 +34,20 @@ embedded_instances {
   "    z: 0.0\n"
   "    w: 1.0\n"
   "  }\n"
-  "  properties {\n"
-  "    id: \"power_level\"\n"
-  "    value: \"75.0\"\n"
-  "    type: PROPERTY_TYPE_NUMBER\n"
+  "}\n"
+  "components {\n"
+  "  id: \"path\"\n"
+  "  component: \"/simple_ai/astar.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
   "  }\n"
-  "  properties {\n"
-  "    id: \"minimum_circle_scale\"\n"
-  "    value: \"1.5\"\n"
-  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -52,9 +58,10 @@ embedded_instances {
   "mass: 0.0\\n"
   "friction: 0.1\\n"
   "restitution: 0.5\\n"
-  "group: \\\"player\\\"\\n"
+  "group: \\\"robot\\\"\\n"
   "mask: \\\"wall\\\"\\n"
   "mask: \\\"robot\\\"\\n"
+  "mask: \\\"player\\\"\\n"
   "embedded_collision_shape {\\n"
   "  shapes {\\n"
   "    shape_type: TYPE_SPHERE\\n"
@@ -94,7 +101,7 @@ embedded_instances {
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/robots/robots.atlas\\\"\\n"
-  "default_animation: \\\"robot\\\"\\n"
+  "default_animation: \\\"robot2\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
@@ -169,6 +176,46 @@ embedded_instances {
   }
 }
 embedded_instances {
+  id: "cone"
+  data: "embedded_components {\n"
+  "  id: \"cone\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/robots/robots.atlas\\\"\\n"
+  "default_animation: \\\"cone\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 32.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: -1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 4.0
+    y: 4.0
+    z: 1.0
+  }
+}
+embedded_instances {
   id: "sounds"
   data: "embedded_components {\n"
   "  id: \"siphon\"\n"
@@ -176,7 +223,7 @@ embedded_instances {
   "  data: \"sound: \\\"/sounds/55829__sergenious__electric.wav\\\"\\n"
   "looping: 1\\n"
   "group: \\\"master,sounds\\\"\\n"
-  "gain: 0.4\\n"
+  "gain: 0.3\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
