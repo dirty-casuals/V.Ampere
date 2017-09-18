@@ -88,17 +88,17 @@ convex_hulls {
 convex_hulls {
   index: 40
   count: 4
-  collision_group: ""
+  collision_group: "wall"
 }
 convex_hulls {
   index: 44
   count: 8
-  collision_group: ""
+  collision_group: "wall"
 }
 convex_hulls {
   index: 52
   count: 8
-  collision_group: ""
+  collision_group: "wall"
 }
 convex_hulls {
   index: 60
@@ -128,12 +128,12 @@ convex_hulls {
 convex_hulls {
   index: 60
   count: 4
-  collision_group: ""
+  collision_group: "wall"
 }
 convex_hulls {
   index: 64
   count: 6
-  collision_group: ""
+  collision_group: "wall"
 }
 convex_hulls {
   index: 70
@@ -173,7 +173,7 @@ convex_hulls {
 convex_hulls {
   index: 70
   count: 4
-  collision_group: ""
+  collision_group: "wall"
 }
 convex_hulls {
   index: 74

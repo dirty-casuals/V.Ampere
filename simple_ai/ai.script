@@ -105,7 +105,7 @@ local function update_path(self)
 end
 
 function init(self)
-	self.scan_for = {hash(constants.ROBOT), hash(constants.WALL), hash(constants.PLAYER)}
+	self.scan_for = {hash(constants.PLAYER), hash(constants.WALL), hash(constants.ROBOT)}
 	self.start_pos = go.get_position()
 	self.start_angle = go.get_rotation()
 	self.siphoned = false
