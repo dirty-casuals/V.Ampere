@@ -47,7 +47,9 @@ local constants = {
     UNMUTE = "UNMUTE",
     MUTE_BUTTON = "mute",
     FIRE_BUTTON = "fire",
-    DIE = "die"
+    DIE = "die",
+    TUTORIAL = "tutorial",
+    END_TUTORIAL = "END_TUTORIAL"
 }
 
 return constants

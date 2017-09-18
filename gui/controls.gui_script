@@ -31,10 +31,11 @@ function init(self)
 	self.yes = gui.get_node(YES)
 	self.restart_game = gui.get_node(RESTART_GAME)
 	self.game_over = gui.get_node(GAME_OVER)
+	self.tutorial = gui.get_node("tutorial")
 	self.started = false
 
 	toggle({self.enable_sound, self.pause, self.yes, self.no, self.paused, self.game_over, self.restart_game}, false)
-	toggle({self.start, self.disable_sound, self.play}, true)
+	toggle({self.start, self.disable_sound, self.play, self.tutorial}, true)
 end
 
 function final(self)
@@ -103,5 +104,7 @@ function on_message(self, message_id, message, sender)
 		toggle({self.yes, self.no, self.enable_sound, self.pause, self.paused, self.disable_sound, self.play, self.restart}, false)
 		toggle({self.restart_game, self.game_over}, true)
 		msg.post(constants.CONTROLLER, constants.END_GAME)
+	elseif message_id == hash(constants.END_TUTORIAL) then
+		toggle({self.tutorial}, false)
 	end
 end
