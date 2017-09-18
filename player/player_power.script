@@ -36,13 +36,13 @@ local function siphon_scan(self)
 		local circle_scale = go.get_scale("circle").x / self.power_circle_start_scale.x
 		local circle_factor = circle_size.x * circle_scale
 		local pos = go.get_position()
-		for angle = -math.pi, math.pi, 0.261799 do
+		for angle = -math.pi, math.pi, 0.314159 do
 			local new_y = math.cos(angle) * circle_factor
 			local new_x = math.sin(angle) * circle_factor
 
 			local new_vect = vmath.vector3(pos.x + new_x, pos.y + new_y, pos.z)
 
-			-- msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
+			msg.post("@render:", "draw_line", { start_point = pos, end_point = new_vect, color = vmath.vector4(0, 0, 0, 1) } )
 			physics.ray_cast(pos, new_vect, {hash(constants.ROBOT)})
 		end
 	end

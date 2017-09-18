@@ -136,7 +136,7 @@ function update(self, dt)
 
 	if self.siphoned == true then
 		msg.post("cone", "disable")
-	elseif active or self.siphoned ~= true then
+	elseif active and self.siphoned ~= true then
 		msg.post("cone", "enable")
 		scan(self)
 	end
