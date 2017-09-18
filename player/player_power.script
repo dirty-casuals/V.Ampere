@@ -2,11 +2,12 @@ local constants = require "constants"
 
 local POWER_LEVEL = 
 
-go.property("power_level", 100.0)
+go.property("power_level", 75.0)
 go.property("movement_drain", -40.0)
 go.property("extra_siphon_drain", -1.0)
 go.property("siphon_drain_rate", 20.0)
-go.property("minimum_circle_scale", 1.0)
+go.property("minimum_circle_scale", 1.5)
+go.property("maximum_circle_scale", 3.0)
 go.property("max_power_level", 100.0)
 
 local function send_message(listeners, message_id, message)
@@ -36,7 +37,7 @@ local function siphon_scan(self)
 		local circle_scale = go.get_scale("circle").x / self.power_circle_start_scale.x
 		local circle_factor = circle_size.x * circle_scale
 		local pos = go.get_position()
-		for angle = -math.pi, math.pi, 0.314159 do
+		for angle = -math.pi, math.pi, 0.628319 do
 			local new_y = math.cos(angle) * circle_factor
 			local new_x = math.sin(angle) * circle_factor
 
@@ -90,7 +91,7 @@ local function update_power_bar(self)
 
 	local scale = (self.power_level / 100) * self.power_circle_start_scale.x
 	local scale_vect = vmath.vector3(scale, scale, scale)
-	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.power_circle_start_scale)
+	local lerped_vect = vmath.lerp(self.power_level / 100, self.min_scale_circle_vect, self.max_scale_circle_vect)
 	go.set_scale(lerped_vect, "circle")
 end
 
@@ -102,11 +103,14 @@ local function die(self)
 end
 
 function init(self)
+	local start_scale = (self.power_level / 100) * self.maximum_circle_scale
+
 	self.prev_pos = go.get_world_position()
 	self.power_outage_listeners = {}
 	self.power_update_listeners = {}
-	self.power_circle_start_scale = go.get_scale("circle")
+	self.power_circle_start_scale = vmath.vector3(start_scale, start_scale, start_scale)
 	self.min_scale_circle_vect = vmath.vector3(self.minimum_circle_scale, self.minimum_circle_scale, self.minimum_circle_scale)
+	self.max_scale_circle_vect = vmath.vector3(self.maximum_circle_scale, self.maximum_circle_scale, self.maximum_circle_scale)
 	self.is_siphoning = false
 	self.ai_map = {}
 
