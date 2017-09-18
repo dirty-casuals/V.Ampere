@@ -87,8 +87,9 @@ function init(self)
 			local tile_idx_x = lx + 1
 			local tile_idx_y = ly + 1
 	        local tile_wall = tilemap.get_tile(constants.LEVEL_1_TILEMAP, hash("walls"), tile_idx_x, tile_idx_y)
+	        local tile_vents = tilemap.get_tile(constants.LEVEL_1_TILEMAP, hash("vents"), tile_idx_x, tile_idx_y)
 			local tile = 1
-			if tile_wall > 0 then
+			if tile_wall > 0 or tile_vents > 0 then
 				tile = tile_wall_cost
 			end
 
