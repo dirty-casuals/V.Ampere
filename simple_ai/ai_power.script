@@ -85,16 +85,17 @@ function init(self)
 	self.screen_width = tonumber(sys.get_config("display.width"))
 	self.was_in_screen = false
 	self.color = vmath.vector4(math.random(), math.random(), math.random(), 0.5)
+	self.block_color = vmath.vector4(self.color.x, self.color.y, self.color.z, 1.0)
 	self.siphon_enabled = false
 	self.sound_playing = false
 	msg.post("circle", "disable")
 	sprite.set_constant("circle", "tint", self.color)
-	sprite.set_constant("#sprite", "tint", vmath.vector4(self.color.x, self.color.y, self.color.z, 1.0))
+	sprite.set_constant("#sprite", "tint", self.block_color)
 	sprite.set_constant("cone", "tint", self.color)
 end
 
 function update(self, dt)
-	if dead then
+	if go.get(self.ai_script_url, "dead") then
 		return
 	end
 
@@ -102,7 +103,7 @@ function update(self, dt)
 
 	if in_screen ~= self.was_in_screen then
 		if in_screen then
-			msg.post("/gui#hud", constants.REGISTER_POWER_BAR, {id = go.get_id(), color = self.color})
+			msg.post("/gui#hud", constants.REGISTER_POWER_BAR, {id = go.get_id(), color = self.block_color})
 			if self.sound_playing == true then
 				send_sound_message(self, constants.SIPHON_SOUND, true)
 			end
@@ -127,7 +128,7 @@ function update(self, dt)
 	self.was_in_screen = in_screen
 
 	if self.power_level <= 0.0 then
-		dead = true
+		go.set(self.ai_script_url, "dead", true)
 		die(self)
 	end
 end

@@ -10,10 +10,9 @@ go.property("speed", 100)
 go.property("siphoned", false)
 go.property("alert_level", 0.0)
 go.property("patrol_end_pos", vmath.vector3(0,0,0))
+go.property("dead", false)
 
 local MAX_ALERT_LEVEL = 100.0
-
-dead = false
 
 local function scan(self)
 	local pos = go.get_position()
@@ -128,7 +127,7 @@ function init(self)
 end
 
 function update(self, dt)
-	if dead then
+	if self.dead then
 		return
 	end
 
