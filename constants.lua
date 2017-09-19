@@ -49,7 +49,8 @@ local constants = {
     FIRE_BUTTON = "fire",
     DIE = "die",
     TUTORIAL = "tutorial",
-    END_TUTORIAL = "END_TUTORIAL"
+    END_TUTORIAL = "END_TUTORIAL",
+    VENT = "vent"
 }
 
 return constants

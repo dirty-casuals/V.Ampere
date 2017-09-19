@@ -8,12 +8,6 @@ images {
   image: "/images/pause_small.png"
 }
 images {
-  image: "/images/play.png"
-}
-images {
-  image: "/images/replay.png"
-}
-images {
   image: "/images/sound_off.png"
 }
 images {
@@ -21,6 +15,18 @@ images {
 }
 images {
   image: "/images/tick.png"
+}
+images {
+  image: "/images/play_big.png"
+}
+images {
+  image: "/images/play_small.png"
+}
+images {
+  image: "/images/replay_small.png"
+}
+images {
+  image: "/images/replay_big.png"
 }
 margin: 0
 extrude_borders: 0

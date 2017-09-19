@@ -31,6 +31,7 @@ local function scan(self)
 		local new_x = math.sin(ray_angle) * projection_length
 
 		local new_vect = vmath.vector3(pos.x + new_x, pos.y + new_y, pos.z)
+		
 
 		physics.ray_cast(pos, new_vect, self.scan_for, angle_idx)
 		go.set_scale(vmath.vector3(cone_scale, cone_scale, 1.0), "cone")
@@ -105,7 +106,7 @@ local function update_path(self)
 end
 
 function init(self)
-	self.scan_for = {hash(constants.PLAYER), hash(constants.WALL), hash(constants.ROBOT)}
+	self.scan_for = {hash(constants.VENT), hash(constants.PLAYER), hash(constants.WALL), hash(constants.ROBOT)}
 	self.start_pos = go.get_position()
 	self.start_angle = go.get_rotation()
 	self.siphoned = false
@@ -168,7 +169,7 @@ function on_message(self, message_id, message, sender)
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
     elseif message_id == hash("contact_point_response") then
-		if message.group == hash(constants.WALL) or message.group == hash(constants.ROBOT) or message.group == hash(constants.PLAYER) then
+		if message.group == hash(constants.WALL) or message.group == hash(constants.ROBOT) or message.group == hash(constants.PLAYER) or message.group == hash(constants.VENT) then
 			go.set_position(go.get_position() + message.normal * message.distance)
 			if message.group == hash(constants.PLAYER) and not self.siphoned then
 				self.waypoint =  message.position

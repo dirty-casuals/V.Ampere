@@ -58,7 +58,7 @@ convex_hulls {
 convex_hulls {
   index: 40
   count: 4
-  collision_group: ""
+  collision_group: "vent"
 }
 convex_hulls {
   index: 44
@@ -325,6 +325,7 @@ convex_hulls {
   count: 0
   collision_group: ""
 }
+collision_groups: "vent"
 collision_groups: "wall"
 animations {
   id: "anim"

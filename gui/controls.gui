@@ -212,7 +212,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "controls/play"
+  texture: "controls/play_small"
   id: "play"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -266,7 +266,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "controls/replay"
+  texture: "controls/replay_small"
   id: "restart"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -469,8 +469,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 64.0
-    y: 64.0
+    x: 128.0
+    y: 128.0
     z: 0.0
     w: 1.0
   }
@@ -482,7 +482,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "controls/play"
+  texture: "controls/play_big"
   id: "start"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -506,7 +506,7 @@ nodes {
 nodes {
   position {
     x: 604.313
-    y: 235.539
+    y: 212.197
     z: 0.0
     w: 1.0
   }
@@ -523,8 +523,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 64.0
-    y: 64.0
+    x: 128.0
+    y: 128.0
     z: 0.0
     w: 1.0
   }
@@ -536,7 +536,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "controls/replay"
+  texture: "controls/replay_big"
   id: "restart_game"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

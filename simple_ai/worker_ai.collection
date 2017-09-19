@@ -62,6 +62,7 @@ embedded_instances {
   "mask: \\\"wall\\\"\\n"
   "mask: \\\"robot\\\"\\n"
   "mask: \\\"player\\\"\\n"
+  "mask: \\\"vent\\\"\\n"
   "embedded_collision_shape {\\n"
   "  shapes {\\n"
   "    shape_type: TYPE_SPHERE\\n"
