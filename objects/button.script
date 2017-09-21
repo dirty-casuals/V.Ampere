@@ -1,0 +1,21 @@
+local constants = require "constants"
+
+go.property("target_object_url", hash(""))
+
+function init(self)
+	self.number_entered = 0
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("trigger_response") and (message.group == hash(constants.PLAYER) or message.group == hash(constants.ROBOT)) then
+		if message.enter then
+			self.number_entered = self.number_entered + 1
+			msg.post(self.target_object_url, "disable")
+		else
+			self.number_entered = self.number_entered - 1
+			if self.number_entered == 0 then
+				msg.post(self.target_object_url, "enable")
+			end
+		end
+	end
+end
