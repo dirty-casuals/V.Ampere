@@ -71,6 +71,7 @@ end
 
 local function die(self)
 	msg.post(constants.SOUND_MANAGER, constants.ROBOT_DEATH, {play = true})
+	msg.post(self.ai_script_url, constants.DIE)
 	msg.post("/gui#hud", constants.UNREGISTER_POWER_BAR, {id = go.get_id()})
 	msg.post("circle", "disable")
 	msg.post("cone", "disable")
@@ -129,7 +130,6 @@ function update(self, dt)
 	self.was_in_screen = in_screen
 
 	if self.power_level <= 0.0 then
-		go.set(self.ai_script_url, "dead", true)
 		die(self)
 	end
 end

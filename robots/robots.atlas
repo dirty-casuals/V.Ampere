@@ -28,26 +28,6 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
-animations {
-  id: "evil_robot"
-  images {
-    image: "/images/evil_robot.png"
-  }
-  playback: PLAYBACK_LOOP_FORWARD
-  fps: 60
-  flip_horizontal: 0
-  flip_vertical: 0
-}
-animations {
-  id: "robot2"
-  images {
-    image: "/images/robot2.png"
-  }
-  playback: PLAYBACK_LOOP_FORWARD
-  fps: 60
-  flip_horizontal: 0
-  flip_vertical: 0
-}
 margin: 0
 extrude_borders: 0
 inner_padding: 0

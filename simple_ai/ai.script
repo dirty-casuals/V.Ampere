@@ -180,6 +180,9 @@ function on_message(self, message_id, message, sender)
 		end
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
+    elseif message_id == hash(constants.DIE) then
+		self.dead = true
+		msg.post(SPRITE, "play_animation", {id = hash("idle")})
     elseif message_id == hash("contact_point_response") then
 		if message.group == hash(constants.WALL) or message.group == hash(constants.ROBOT) or message.group == hash(constants.PLAYER) or message.group == hash(constants.VENT) then
 			go.set_position(go.get_position() + message.normal * message.distance)
