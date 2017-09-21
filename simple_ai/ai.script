@@ -13,6 +13,7 @@ go.property("patrol_end_pos", vmath.vector3(0,0,0))
 go.property("dead", false)
 
 local MAX_ALERT_LEVEL = 100.0
+local SPRITE = "#sprite"
 
 local function scan(self)
 	local pos = go.get_position()
@@ -40,6 +41,7 @@ end
 
 local function move_to_target(self, dt)
 	if self.waypoint ~= nil then
+		self.moving = true
 		local pos = go.get_position()
 		local target_angle = -math.atan2(self.waypoint.x - pos.x, self.waypoint.y - pos.y)
 		local current_quat = go.get_rotation()
@@ -122,9 +124,12 @@ function init(self)
 	for angle = -math.pi / 6, (math.pi / 6) + 0.01, 0.174533 do
 		self.scan_angles[#self.scan_angles + 1] = angle
 	end
-	self.path = {}
 	self.waypoint = nil
 	self.chasing = false
+	self.moving = false
+	self.bool_to_anim = {}
+	self.bool_to_anim[true] = "walk"
+	self.bool_to_anim[false] = "idle"
 end
 
 function update(self, dt)
@@ -134,6 +139,9 @@ function update(self, dt)
 
 	local near_screen = camera.is_go_near_screen(go.get_id("/ortho"), go.get_position(), self.screen_width, self.screen_height, self.normal_projection_length)
 	local active = near_screen or self.alert_level > 0.0
+
+	local was_moving = self.moving
+	self.moving = false
 
 	if self.siphoned == true then
 		msg.post("cone", "disable")
@@ -152,6 +160,10 @@ function update(self, dt)
 	end
 
 	update_power_level(self, dt)
+
+	if was_moving ~= self.moving then
+		msg.post(SPRITE, "play_animation", {id = hash(self.bool_to_anim[self.moving])})
+	end
 
 	self.alert_rate = self.alert_decrease_rate
 	self.siphoned = false
