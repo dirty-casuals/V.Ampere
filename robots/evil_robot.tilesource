@@ -16,7 +16,7 @@ animations {
 }
 animations {
   id: "walk"
-  start_tile: 1
+  start_tile: 2
   end_tile: 3
   playback: PLAYBACK_LOOP_FORWARD
   fps: 6
