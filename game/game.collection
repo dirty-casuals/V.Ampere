@@ -989,7 +989,7 @@ embedded_instances {
   "  data: \"sound: \\\"/sounds/DST-SteelCandle.ogg\\\"\\n"
   "looping: 1\\n"
   "group: \\\"master,music\\\"\\n"
-  "gain: 0.5\\n"
+  "gain: 0.35\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
