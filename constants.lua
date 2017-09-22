@@ -20,6 +20,7 @@ local constants = {
     ROBOT = "robot",
     PLAYER = "player",
     WALL = "wall",
+    ALERT = "alert",
     REGISTER_POWER_BAR = "REGISTER_POWER_BAR",
     UNREGISTER_POWER_BAR = "UNREGISTER_POWER_BAR",
     AI_POWER_UPDATE = "AI_POWER_UPDATE",

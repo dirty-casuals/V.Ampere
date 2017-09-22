@@ -14,6 +14,7 @@ go.property("dead", false)
 
 local MAX_ALERT_LEVEL = 100.0
 local SPRITE = "#sprite"
+local ALERT_TRIGGER = "alert_trigger"
 
 local function scan(self)
 	local pos = go.get_position()
@@ -107,6 +108,24 @@ local function update_path(self)
 	end
 end
 
+local function disable_alert_trigger(self)
+	self.alert_triggered = false
+	msg.post(ALERT_TRIGGER, "disable")
+end
+
+local function enable_alert_trigger(self)
+	self.alert_triggered = true
+	msg.post(ALERT_TRIGGER, "enable")
+end
+
+local function hunt_player(self, position)
+	self.waypoint =  position
+	self.path = {}
+	self.goal = self.waypoint
+	self.chasing = true
+	self.alert_rate = self.alert_increase_rate
+end
+
 function init(self)
 	self.scan_for = {hash(constants.VENT), hash(constants.PLAYER), hash(constants.WALL), hash(constants.ROBOT)}
 	self.start_pos = go.get_position()
@@ -130,6 +149,8 @@ function init(self)
 	self.bool_to_anim = {}
 	self.bool_to_anim[true] = "walk"
 	self.bool_to_anim[false] = "idle"
+	self.alert_triggered = false
+	msg.post(ALERT_TRIGGER, "disable")
 end
 
 function update(self, dt)
@@ -161,6 +182,18 @@ function update(self, dt)
 
 	update_power_level(self, dt)
 
+	if self.alert_level == 0.0 then
+		if self.alert_triggered == true then
+			print("dis")
+			disable_alert_trigger(self)
+		end
+	else
+		if self.alert_triggered ~= true then
+			print("en")
+			enable_alert_trigger(self)
+		end
+	end
+
 	if was_moving ~= self.moving then
 		msg.post(SPRITE, "play_animation", {id = hash(self.bool_to_anim[self.moving])})
 	end
@@ -172,11 +205,7 @@ end
 function on_message(self, message_id, message, sender)
     if message_id == hash("ray_cast_response") then
 		if message.group == hash(constants.PLAYER) then
-			self.waypoint =  message.position
-			self.goal = self.waypoint
-			self.path = {}
-			self.chasing = true
-			self.alert_rate = self.alert_increase_rate
+			hunt_player(self, message.position)
 		end
     elseif message_id == hash(constants.PLAYER_SIPHON) then
 		self.siphoned = true
@@ -187,12 +216,13 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash(constants.WALL) or message.group == hash(constants.ROBOT) or message.group == hash(constants.PLAYER) or message.group == hash(constants.VENT) then
 			go.set_position(go.get_position() + message.normal * message.distance)
 			if message.group == hash(constants.PLAYER) and not self.siphoned then
-				self.waypoint =  message.position
-				self.path = {}
-				self.goal = self.waypoint
-				self.chasing = true
-				self.alert_rate = self.alert_increase_rate
+			hunt_player(self, message.position)
 			end
+		end
+	elseif message_id == hash("trigger_response") and message.group == hash(constants.ALERT) and message.enter == true then
+		if self.alert_level == 0.0 then
+			self.alert_level = 75.0
+			hunt_player(self, go.get_position("/player/player"))
 		end
 	end
 end
