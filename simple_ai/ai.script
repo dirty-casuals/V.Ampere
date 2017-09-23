@@ -33,8 +33,10 @@ end
 
 local function scan(self)
 	if self.alert_level == 0.0 and self.disable_raycasts_until_alerted then
+		msg.post("cone", "disable")
 		return
 	end
+
 	local pos = go.get_position()
 	local z_rot = go.get_rotation().z
 	local rot = math.asin(z_rot)
@@ -173,6 +175,7 @@ function init(self)
 	self.bool_to_anim[false] = "idle"
 	self.alert_triggered = false
 	msg.post(ALERT_TRIGGER, "disable")
+	scan(self)
 end
 
 function update(self, dt)
