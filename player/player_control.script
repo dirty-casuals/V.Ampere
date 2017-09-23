@@ -11,6 +11,7 @@ function init(self)
 	self.move = 0
 	self.rotate = 0
 	self.fire_listeners = {}
+	self.firing = false
 end
 
 function final(self)
@@ -40,27 +41,34 @@ function update(self, dt)
 end
 
 function on_input(self, action_id, action)
-	if action_id == hash("left") then
-		self.rotate = action.released and 0 or 1
-	elseif action_id == hash("right") then
-		self.rotate = action.released and 0 or -1
-	end
-	
-	if action_id == hash("up") then
-		self.move = action.released and 0 or 1
-	elseif action_id == hash("down") then
-		self.move = action.released and 0 or -1
-	end
-	
 	if action_id == hash(constants.FIRE_BUTTON) then
 		if action.pressed then
+			self.firing = true
 			for idx, listener in pairs(self.fire_listeners) do
 				msg.post(listener, constants.FIRE_PRESS)
 			end
 		elseif action.released then
+			self.firing = false
 			for idx, listener in pairs(self.fire_listeners) do
 				msg.post(listener, constants.FIRE_RELEASE)
 			end
+		end
+	end
+
+	if self.firing then
+		self.rotate = 0
+		self.move = 0
+	else
+		if action_id == hash("left") then
+			self.rotate = action.released and 0 or 1
+		elseif action_id == hash("right") then
+			self.rotate = action.released and 0 or -1
+		end
+		
+		if action_id == hash("up") then
+			self.move = action.released and 0 or 1
+		elseif action_id == hash("down") then
+			self.move = action.released and 0 or -1
 		end
 	end
 end

@@ -765,8 +765,7 @@ nodes {
   "Space bar to trigger power leech\n"
   "Leech power from enemy robots\n"
   "Can only leech enemies that aren\'t alerted\n"
-  "You leak power as you move\n"
-  "Leeching amplifies the leak"
+  "You leak power as you move"
   font: "system_font_small"
   id: "text1"
   xanchor: XANCHOR_LEFT
