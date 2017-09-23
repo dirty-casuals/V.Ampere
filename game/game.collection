@@ -939,26 +939,6 @@ collection_instances {
   }
 }
 collection_instances {
-  id: "level1"
-  collection: "/levels/firstlevel.collection"
-  position {
-    x: 304.497
-    y: 0.0
-    z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.70710677
-    w: 0.70710677
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-collection_instances {
   id: "worker11"
   collection: "/simple_ai/worker_ai.collection"
   position {
