@@ -1202,8 +1202,8 @@ embedded_instances {
   "    index: 0\\n"
   "    count: 3\\n"
   "  }\\n"
-  "  data: 10.0\\n"
-  "  data: 25.0\\n"
+  "  data: 180.492\\n"
+  "  data: 54.3915\\n"
   "  data: 10.0\\n"
   "}\\n"
   "linear_damping: 0.0\\n"
@@ -1235,8 +1235,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 20.714
-    y: 3.253
+    x: 1.0
+    y: 1.0
     z: 1.0
   }
 }
