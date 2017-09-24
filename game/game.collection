@@ -167,7 +167,7 @@ collection_instances {
   collection: "/simple_ai/simple_ai.collection"
   position {
     x: 2223.877
-    y: 2740.952
+    y: 2587.031
     z: 0.0
   }
   rotation {
@@ -181,8 +181,13 @@ collection_instances {
     properties {
       id: "ai"
       properties {
+        id: "scan_distance_tiles"
+        value: "6.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
         id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
+        value: "2223.877,1523.824,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -197,23 +202,28 @@ collection_instances {
   id: "ai2"
   collection: "/simple_ai/simple_ai.collection"
   position {
-    x: 1111.201
-    y: 5733.19
+    x: 590.982
+    y: 4761.46
     z: 0.0
   }
   rotation {
     x: 0.0
     y: 0.0
-    z: -0.70710677
-    w: 0.70710677
+    z: 1.0
+    w: 6.123234E-17
   }
   instance_properties {
     id: "ai"
     properties {
       id: "ai"
       properties {
+        id: "scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
         id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
+        value: "590.982,3439.416,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -228,15 +238,15 @@ collection_instances {
   id: "ai3"
   collection: "/simple_ai/simple_ai.collection"
   position {
-    x: 2479.026
-    y: 6278.761
+    x: 2243.789
+    y: 5378.138
     z: 0.0
   }
   rotation {
     x: 0.0
     y: 0.0
-    z: 0.70710677
-    w: 0.70710677
+    z: 1.0
+    w: 6.123234E-17
   }
   instance_properties {
     id: "ai"
@@ -244,7 +254,7 @@ collection_instances {
       id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
+        value: "2243.789,3847.49,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -259,8 +269,8 @@ collection_instances {
   id: "worker1"
   collection: "/simple_ai/worker_ai.collection"
   position {
-    x: 811.591
-    y: 3667.155
+    x: 922.944
+    y: 3387.513
     z: 0.0
   }
   rotation {
@@ -304,7 +314,7 @@ collection_instances {
   collection: "/simple_ai/simple_ai.collection"
   position {
     x: 295.787
-    y: 4063.363
+    y: 5783.957
     z: 0.0
   }
   rotation {
@@ -319,7 +329,7 @@ collection_instances {
       id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
+        value: "2112.653,5783.957,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -334,8 +344,8 @@ collection_instances {
   id: "worker2"
   collection: "/simple_ai/worker_ai.collection"
   position {
-    x: 291.26
-    y: 4522.977
+    x: 894.927
+    y: 4722.059
     z: 0.0
   }
   rotation {
@@ -378,70 +388,8 @@ collection_instances {
   id: "ai5"
   collection: "/simple_ai/simple_ai.collection"
   position {
-    x: 3005.1
-    y: 8420.144
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  instance_properties {
-    id: "ai"
-    properties {
-      id: "ai"
-      properties {
-        id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
-        type: PROPERTY_TYPE_VECTOR3
-      }
-    }
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-collection_instances {
-  id: "ai6"
-  collection: "/simple_ai/simple_ai.collection"
-  position {
-    x: 1299.296
-    y: 10131.228
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: -0.70710677
-    w: 0.70710677
-  }
-  instance_properties {
-    id: "ai"
-    properties {
-      id: "ai"
-      properties {
-        id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
-        type: PROPERTY_TYPE_VECTOR3
-      }
-    }
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-collection_instances {
-  id: "ai7"
-  collection: "/simple_ai/simple_ai.collection"
-  position {
-    x: 5779.063
-    y: 8607.394
+    x: 2198.973
+    y: 6376.124
     z: 0.0
   }
   rotation {
@@ -456,7 +404,69 @@ collection_instances {
       id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
+        value: "462.994,6376.124,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai6"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 1522.409
+    y: 10136.325
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    w: 6.123234E-17
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "1522.409,8612.112,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai7"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 2838.748
+    y: 10110.462
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "2838.748,10110.462,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -471,7 +481,7 @@ collection_instances {
   id: "ai8"
   collection: "/simple_ai/simple_ai.collection"
   position {
-    x: 6073.134
+    x: 4899.832
     y: 7191.3
     z: 0.0
   }
@@ -487,7 +497,7 @@ collection_instances {
       id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
+        value: "4899.832,7191.3,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -503,7 +513,7 @@ collection_instances {
   collection: "/simple_ai/simple_ai.collection"
   position {
     x: 8927.167
-    y: 7637.244
+    y: 8347.546
     z: 0.0
   }
   rotation {
@@ -518,7 +528,7 @@ collection_instances {
       id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
+        value: "8927.167,5874.675,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -549,7 +559,7 @@ collection_instances {
       id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "575.0,1400.0,0.0"
+        value: "8392.036,5803.153,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
@@ -592,50 +602,11 @@ collection_instances {
   }
 }
 collection_instances {
-  id: "worker3"
-  collection: "/simple_ai/worker_ai.collection"
-  position {
-    x: 2533.762
-    y: 3810.527
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.70710677
-    w: 0.70710677
-  }
-  instance_properties {
-    id: "ai"
-    properties {
-      id: "ai"
-      properties {
-        id: "scan_distance_tiles"
-        value: "6.0"
-        type: PROPERTY_TYPE_NUMBER
-      }
-    }
-    properties {
-      id: "ai_power"
-      properties {
-        id: "minimum_circle_scale"
-        value: "1.5"
-        type: PROPERTY_TYPE_NUMBER
-      }
-    }
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-collection_instances {
   id: "worker4"
   collection: "/simple_ai/worker_ai.collection"
   position {
-    x: 4377.812
-    y: 8922.469
+    x: 4420.34
+    y: 8879.941
     z: 0.0
   }
   rotation {
@@ -722,15 +693,15 @@ collection_instances {
   id: "worker6"
   collection: "/simple_ai/worker_ai.collection"
   position {
-    x: 7395.83
-    y: 9439.515
+    x: 7808.836
+    y: 9310.877
     z: 0.0
   }
   rotation {
     x: 0.0
     y: 0.0
-    z: 1.0
-    w: 6.123234E-17
+    z: 0.70710677
+    w: 0.70710677
   }
   instance_properties {
     id: "ai"
@@ -810,7 +781,7 @@ collection_instances {
   id: "worker8"
   collection: "/simple_ai/worker_ai.collection"
   position {
-    x: 6250.563
+    x: 6201.734
     y: 5025.989
     z: 0.0
   }
@@ -855,7 +826,7 @@ collection_instances {
   collection: "/simple_ai/worker_ai.collection"
   position {
     x: 10012.389
-    y: 4972.325
+    y: 4918.647
     z: 0.0
   }
   rotation {
@@ -988,6 +959,1095 @@ collection_instances {
   position {
     x: 921.845
     y: 1694.882
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai12"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 2578.953
+    y: 3806.523
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "scan_distance_tiles"
+        value: "6.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "patrol_end_pos"
+        value: "0.0,0.0,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai13"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 4714.94
+    y: 8448.465
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "4714.94,9404.145,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai14"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 5789.596
+    y: 9234.03
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "5789.596,8623.179,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai15"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 7692.846
+    y: 8938.881
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "7692.846,8054.729,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai16"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 6027.666
+    y: 5346.785
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "6027.666,6527.273,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai17"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 8703.013
+    y: 8042.937
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "7688.193,8042.937,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai18"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 8058.385
+    y: 5332.868
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "6418.254,5332.868,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "ai19"
+  collection: "/simple_ai/simple_ai.collection"
+  position {
+    x: 1063.263
+    y: 4090.618
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "patrol_end_pos"
+        value: "1063.263,4090.618,0.0"
+        type: PROPERTY_TYPE_VECTOR3
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker3"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 2442.986
+    y: 2269.641
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker12"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 1126.805
+    y: 2667.005
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker13"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 2550.095
+    y: 4200.851
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker14"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 1554.753
+    y: 6092.074
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    w: 6.123234E-17
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker15"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 448.157
+    y: 6280.695
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    w: 6.123234E-17
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker16"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 2677.532
+    y: 8474.623
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker17"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 1874.169
+    y: 9805.199
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker18"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 5301.971
+    y: 8962.346
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker19"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 3312.131
+    y: 9867.054
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    w: 6.123234E-17
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker20"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 3062.996
+    y: 9590.233
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker21"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 5103.925
+    y: 9142.426
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker22"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 4468.797
+    y: 7292.566
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker23"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 7283.501
+    y: 8623.161
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker24"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 7284.932
+    y: 8775.255
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker25"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 9395.531
+    y: 7487.279
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker26"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 9395.8
+    y: 7228.665
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker27"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 5636.613
+    y: 5649.919
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    w: 6.123234E-17
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker28"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 8816.52
+    y: 4925.008
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.70710677
+    w: 0.70710677
+  }
+  instance_properties {
+    id: "ai"
+    properties {
+      id: "ai"
+      properties {
+        id: "alerted_scan_distance_tiles"
+        value: "4.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+      properties {
+        id: "scan_distance_tiles"
+        value: "1.0"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+    properties {
+      id: "ai_power"
+      properties {
+        id: "minimum_circle_scale"
+        value: "1.5"
+        type: PROPERTY_TYPE_NUMBER
+      }
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "worker29"
+  collection: "/simple_ai/worker_ai.collection"
+  position {
+    x: 8971.768
+    y: 5287.377
     z: 0.0
   }
   rotation {
