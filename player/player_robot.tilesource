@@ -1,16 +1,25 @@
-image: "/images/robot.png"
-tile_width: 49
-tile_height: 43
+image: "/images/robot_anims.png"
+tile_width: 64
+tile_height: 64
 tile_margin: 0
 tile_spacing: 0
 collision: ""
 material_tag: "tile"
 animations {
-  id: "anim"
+  id: "idle"
   start_tile: 1
   end_tile: 1
-  playback: PLAYBACK_ONCE_FORWARD
+  playback: PLAYBACK_NONE
   fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "walk"
+  start_tile: 2
+  end_tile: 3
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 6
   flip_horizontal: 0
   flip_vertical: 0
 }

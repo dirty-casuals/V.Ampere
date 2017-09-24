@@ -1,6 +1,8 @@
 local constants = require "constants"
 local camera = require "orthographic.camera"
 
+local SPRITE = "#sprite"
+
 go.property("angular_velocity", 5)
 go.property("linear_velocity", 200)
 go.property("dead", false)
@@ -12,6 +14,7 @@ function init(self)
 	self.rotate = 0
 	self.fire_listeners = {}
 	self.firing = false
+	self.last_move = self.move
 end
 
 function final(self)
@@ -38,6 +41,16 @@ function update(self, dt)
 		pos = pos + direction
 		go.set_position(pos)
 	end
+
+	if self.last_move ~= self.move then
+		if self.move == 0 then 
+			msg.post(SPRITE, "play_animation", {id = hash("idle")})
+		else
+			msg.post(SPRITE, "play_animation", {id = hash("walk")})
+		end
+	end
+
+	self.last_move = self.move
 end
 
 function on_input(self, action_id, action)
