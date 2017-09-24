@@ -63,3 +63,6 @@ ray_cast_limit_2d = 256
 [profiler]
 track_cpu = 0
 
+[sprite]
+max_count = 256
+
