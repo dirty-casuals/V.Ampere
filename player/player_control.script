@@ -1,5 +1,5 @@
 local constants = require "constants"
-local camera = require "orthographic.camera"
+local camera = require "vendors.orthographic.camera"
 
 local SPRITE = "#sprite"
 
@@ -87,7 +87,6 @@ function on_input(self, action_id, action)
 end
 
 function on_message(self, message_id, message, sender)
-	pprint(message)
 	if message_id == hash(constants.LISTEN_FIRE_PRESS) then
 		self.fire_listeners[#self.fire_listeners + 1] = sender
 	elseif message_id == hash("contact_point_response") and message.group == hash(constants.WALL) then

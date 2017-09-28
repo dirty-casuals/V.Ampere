@@ -1,4 +1,4 @@
-local camera = require("orthographic.camera")
+local camera = require("vendors.orthographic.camera")
 
 local M = {}
 
