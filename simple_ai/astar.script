@@ -1,9 +1,9 @@
 local constants = require "constants"
-
 local astar = require("astar/astar")
+local level = require("level_dumps/level1")
+
 local TILE_SIZE = 64
 local ZORDER_PATH = 0.5
-local level = {}
 local level_size = {}
 local width = {}
 local height = {}
@@ -81,38 +81,38 @@ function init(self)
     level_size = vmath.vector3(width, height, 0)
 
 	-- Create cost of each tile, tiles with walls on are very high cost
-	local tile_wall_cost = 10000
-    for ly = 0, height - 1 do
-	    for lx = 0, width - 1 do
-			local tile_idx_x = lx + 1
-			local tile_idx_y = ly + 1
-	        local tile_wall = tilemap.get_tile(constants.LEVEL_1_TILEMAP, hash("walls"), tile_idx_x, tile_idx_y)
-	        local tile_vents = tilemap.get_tile(constants.LEVEL_1_TILEMAP, hash("vents"), tile_idx_x, tile_idx_y)
-			local tile = 1
-			if tile_wall > 0 or tile_vents > 0 then
-				tile = tile_wall_cost
-			end
+	-- local tile_wall_cost = 10000
+    -- for ly = 0, height - 1 do
+	--     for lx = 0, width - 1 do
+	-- 		local tile_idx_x = lx + 1
+	-- 		local tile_idx_y = ly + 1
+	--      local tile_wall = tilemap.get_tile(constants.LEVEL_1_TILEMAP, hash("walls"), tile_idx_x, tile_idx_y)
+	--      local tile_vents = tilemap.get_tile(constants.LEVEL_1_TILEMAP, hash("vents"), tile_idx_x, tile_idx_y)
+	-- 		local tile = 1
+	-- 		if tile_wall > 0 or tile_vents > 0 then
+	-- 			tile = tile_wall_cost
+	-- 		end
 
-            level[ly * width + lx + 1] = tile
-	    end
-    end
+    --         level[ly * width + lx + 1] = tile
+	--     end
+    -- end
 
-	-- Second pass to slightly increase the cost of tiles next to walls
-    for idx = 1, #level, 1 do
-		if level[idx] ~= tile_wall_cost then
-			local tile_right = idx + 1
-			local tile_left = idx - 1
-			local tile_up = idx + width
-			local tile_down = idx - width
+	-- -- Second pass to slightly increase the cost of tiles next to walls
+    -- for idx = 1, #level, 1 do
+	-- 	if level[idx] ~= tile_wall_cost then
+	-- 		local tile_right = idx + 1
+	-- 		local tile_left = idx - 1
+	-- 		local tile_up = idx + width
+	-- 		local tile_down = idx - width
 
-			if level[tile_right] == tile_wall_cost or
-				level[tile_left] == tile_wall_cost or
-				level[tile_up] == tile_wall_cost or
-				level[tile_down] == tile_wall_cost then
-				level[idx] = 5
-			end
-		end
-	end
+	-- 		if level[tile_right] == tile_wall_cost or
+	-- 			level[tile_left] == tile_wall_cost or
+	-- 			level[tile_up] == tile_wall_cost or
+	-- 			level[tile_down] == tile_wall_cost then
+	-- 			level[idx] = 5
+	-- 		end
+	-- 	end
+	-- end
 
 	-- local start_screen = go.get_position()
     -- local start_coord_x, start_coord_y = screen_to_coords(start_screen.x, start_screen.y)
