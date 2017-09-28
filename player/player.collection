@@ -57,6 +57,7 @@ embedded_instances {
   "mask: \\\"robot\\\"\\n"
   "mask: \\\"tutorial\\\"\\n"
   "mask: \\\"button\\\"\\n"
+  "mask: \\\"win\\\"\\n"
   "embedded_collision_shape {\\n"
   "  shapes {\\n"
   "    shape_type: TYPE_SPHERE\\n"

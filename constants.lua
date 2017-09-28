@@ -51,7 +51,8 @@ local constants = {
     DIE = "die",
     TUTORIAL = "tutorial",
     END_TUTORIAL = "END_TUTORIAL",
-    VENT = "vent"
+    VENT = "vent",
+    WIN = "win"
 }
 
 return constants
