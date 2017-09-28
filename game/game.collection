@@ -618,7 +618,7 @@ collection_instances {
   id: "ai7"
   collection: "/simple_ai/simple_ai.collection"
   position {
-    x: 2838.748
+    x: 3290.27
     y: 10110.462
     z: 0.0
   }
@@ -634,7 +634,7 @@ collection_instances {
       id: "ai"
       properties {
         id: "patrol_end_pos"
-        value: "2838.748,10110.462,0.0"
+        value: "1901.944,10110.462,0.0"
         type: PROPERTY_TYPE_VECTOR3
       }
     }
